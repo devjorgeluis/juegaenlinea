@@ -1,33 +1,63 @@
-import { useOutletContext } from "react-router-dom";
-
 const GameCard = (props) => {
-  const { isMobile } = useOutletContext();
-
   return (
-    <div className="sc-gSkVGw sc-lbNtLv evQOJh bdSJRm cy-single-game-regular-template game-box swiper-mode game-group-videoslot game-category-slots game-company-games-global">
-      <div className="sc-clcPwD gAMnwT cy-game-image-container game-image-container" onClick={props.onGameClick}>
-        <div className="sc-lltiPY fetLmC">
-          <div className="sc-iJfeOL iEEUQU">
-            <img
-              className="sc-ivDtld kQdJxW cy-game-image single-game-image"
-              src={props.imageSrc}
-              alt={props.title}
-              loading="lazy"
-              fetchPriority="high"
-              style={{ width: "100%", height: isMobile ? 160 : 270 }}
-            />
-          </div>
-        </div>
+    <div className="float-casino-search-item" onClick={props.onGameClick}>
+      <div className="game-art">
+        <a className="game-art-ex" href="#">
+          <span
+            className="game-art-figure"
+            style={{
+              backgroundImage: `url(${props.imageSrc})`,
+            }}
+          >
+            <span className="game-art-only">
+              <span className="game-art-only-i">
+                <i className="fa-solid fa-user front"></i>
+                <i className="fa-solid fa-user back"></i>
+              </span>
+              0
+            </span>
 
-        <button  className="sc-hjcAab sc-lbyFfZ dDsQeo dVMOeZ cy-play-real-game-button"></button>
-      </div>
+            <span className="game-art-figure-hover">
+              <span className="game-art-figure-hover-ex">
+                <span className="game-art-figure-hover-item">
+                  <span
+                    className="game-art-figure-hover-item-top"
+                    style={{ display: "none" }}
+                  >
+                    Jackpot
+                  </span>
+                  <span className="game-art-figure-hover-item-bottom">
+                    {props.title || "Giga Match Gems"}
+                  </span>
+                </span>
 
-      <div className="sc-jdENQA isEobv cy-game-details-container">
-        <div className="sc-khkubr ywxlO cy-game-info-section">
-          <div className="sc-jIJgEx kuqDGV cy-game-title two-lines-title multiple-lines-title">
-            {props.title}
-          </div>
-        </div>
+                <span
+                  className="game-art-figure-hover-item"
+                  style={{ display: "none" }}
+                >
+                  <span className="game-art-figure-hover-item-top">
+                    Effective RTP
+                  </span>
+                  <span className="game-art-figure-hover-item-bottom">
+                    {props.rtp || "98.00%"}
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+
+          <span className="game-art-name">
+            {props.title || "Giga Match Gems"}
+          </span>
+
+          <span className="game-art-date">
+            {props.provider || "casino"}
+          </span>
+
+          <span className="game-art-favorite">
+            <i className="fa-star fa-regular"></i>
+          </span>
+        </a>
       </div>
     </div>
   );

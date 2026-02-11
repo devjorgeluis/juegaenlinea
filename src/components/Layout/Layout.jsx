@@ -14,11 +14,6 @@ import MyProfileModal from "../Modal/MyProfileModal";
 // import HistoryModal from "../Modal/HistoryModal";
 import FullDivLoading from "../Loading/FullDivLoading";
 import GameModal from "../Modal/GameModal";
-// import IconClose from "/src/assets/svg/circle-close.svg";
-// import IconArrowRight from "/src/assets/svg/arrow-right.svg";
-// import IconHistory from "/src/assets/svg/history.svg";
-// import IconPoker from "/src/assets/svg/poker.svg";
-// import IconArrowUpdown from "/src/assets/svg/arrow-updown.svg";
 
 const Layout = () => {
     const { contextData } = useContext(AppContext);
@@ -197,8 +192,10 @@ const Layout = () => {
     };
 
     const handleLogoutClick = () => {
+        setShowFullDivLoading(true);
         callApi(contextData, "POST", "/logout", (result) => {
             if (result.status === "success") {
+                setShowFullDivLoading(false);
                 setTimeout(() => {
                     localStorage.removeItem("session");
                     window.location.href = "/";
@@ -475,12 +472,8 @@ const Layout = () => {
                             isLogin={isLogin}
                             isMobile={isMobile}
                             userBalance={userBalance}
-                            isSlotsOnly={isSlotsOnly}
                             handleLoginClick={handleLoginClick}
                             handleLogoutClick={handleLogoutClick}
-                            handleMyProfileClick={handleMyProfileClick}
-                            handleHistoryClick={handleHistoryClick}
-                            supportParent={supportParent}
                             openSupportModal={openSupportModal}
                         />
                         <Outlet context={{ isSlotsOnly, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />

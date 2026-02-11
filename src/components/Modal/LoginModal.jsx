@@ -15,6 +15,11 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
         event.preventDefault();
         event.stopPropagation();
 
+        if (!username.trim() || !password.trim()) {
+            setErrorMsg("Por favor completa ambos campos");
+            return;
+        }
+
         setIsLoading(true);
         setErrorMsg("");
 
@@ -30,107 +35,155 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
     const callbackSubmitLogin = (result) => {
         setIsLoading(false);
 
-        if (result.status === "success") {
+        if (result?.status === "success") {
             localStorage.setItem("session", JSON.stringify(result));
             updateSession(result);
-
-            onLoginSuccess?.(result.user.balance);
-
+            onLoginSuccess?.(result.user?.balance);
             setTimeout(() => {
                 onClose();
-            }, 1000);
-        } else if (result.status === "country") {
-            setErrorMsg(result.message);
-        } else {
-            setErrorMsg("Nombre de usuario y contraseña no válidos");
+            }, 800);
+        } 
+        else if (result?.status === "country") {
+            setErrorMsg(result.message || "Restricción por país");
+        } 
+        else {
+            setErrorMsg(
+                result?.message || 
+                "Nombre de usuario o contraseña incorrectos"
+            );
         }
     };
 
+    const togglePasswordVisibility = () => {
+        setShowPassword((prev) => !prev);
+    };
+
+    // Update input type when showPassword changes
     useEffect(() => {
-        const passwordInput = document.getElementById("password");
+        const passwordInput = document.getElementById("password-input");
         if (passwordInput) {
-            passwordInput.setAttribute("type", showPassword ? "text" : "password");
+            passwordInput.type = showPassword ? "text" : "password";
         }
     }, [showPassword]);
 
     if (!isOpen) return null;
 
     return (
-        <div className="rllogin-overlay" id="rlLoginOverlay">
-            <div className="rllogin-main-wrapper">
-                <div id="rlLoginFormWrapper" className="rllogin-form-wrapper">
-                    <div className="rllogin-top-section">
-                        <div className="rllogin-header">
-                            <div className="rllogin-back" />
-                            <div className="rllogin-logo" />
-                            <a id="rlLoginCloseButton" className="rllogin-strip-close-btn" onClick={onClose}>
-                                <div className="rllogin-close-button" />
-                            </a>
-                        </div>
+        <>
+            <div className="modal-backdrop fade show"></div>
 
-                        <div className="rllogin-form-container" id="rllogin-form-container">
-                            <form onSubmit={handleSubmit}>
-                                <div className="rllogin-group-input">
-                                    <div className="rllogin-rlLoginUsername">
-                                        <span className="rllogin-rlLoginUsername-user" />
-                                        <input
-                                            id="rlLoginUsername"
-                                            className="gray-placeholder-text"
-                                            type="text"
-                                            placeholder="Nombre de usuario"
-                                            value={username}
-                                            onChange={(e) => setUsername(e.target.value)}
-                                        />
+            <div
+                className="modal fade show"
+                id="modalLogin"
+                tabIndex="-1"
+                aria-labelledby="modalLoginLabel"
+                aria-modal="true"
+                role="dialog"
+                style={{ display: "block" }}
+            >
+                <div className="modal-dialog modal-lg modal-dialog-centered">
+                    <div className="modal-content">
+                        <div className="modal-body">
+                            <div className="modal-auth">
+                                <div className="modal-auth-content">
+                                    <button
+                                        type="button"
+                                        className="btn-close"
+                                        aria-label="Close"
+                                        onClick={onClose}
+                                    >
+                                        <i className="fa-solid fa-xmark"></i>
+                                    </button>
+
+                                    <div className="modal-auth-form mt-4">
+                                        <ul className="nav nav-tabs" role="tablist">
+                                            <li className="nav-item" role="presentation">
+                                                <button
+                                                    className="btn nav-link active"
+                                                    id="login-tab"
+                                                    data-bs-toggle="tab"
+                                                    data-bs-target="#login-tab-pane"
+                                                    type="button"
+                                                    role="tab"
+                                                    aria-selected="true"
+                                                >
+                                                    <span>Ingresar</span>
+                                                </button>
+                                            </li>
+                                        </ul>
+
+                                        <div className="tab-content" id="tabAuth">
+                                            <form
+                                                className="tab-pane active show"
+                                                id="login-tab-pane"
+                                                role="tabpanel"
+                                                onSubmit={handleSubmit}
+                                            >
+                                                {errorMsg && (
+                                                    <div className="alert alert-danger mb-3">
+                                                        {errorMsg}
+                                                    </div>
+                                                )}
+
+                                                <div className="modal-auth-form-title mb-2">Usuario</div>
+                                                <div className="input-group mb-3">
+                                                    <input
+                                                        className="form-control"
+                                                        type="text"
+                                                        placeholder="Usuario"
+                                                        value={username}
+                                                        onChange={(e) => setUsername(e.target.value)}
+                                                        autoFocus
+                                                        disabled={isLoading}
+                                                    />
+                                                </div>
+
+                                                <div className="modal-auth-form-title mb-2">Contraseña</div>
+                                                <div className="input-group input-group-password mb-4">
+                                                    <input
+                                                        id="password-input"
+                                                        className="form-control"
+                                                        type="password"
+                                                        placeholder="Contraseña"
+                                                        value={password}
+                                                        onChange={(e) => setPassword(e.target.value)}
+                                                        disabled={isLoading}
+                                                    />
+                                                    <span
+                                                        className="input-toggle-password"
+                                                        onClick={togglePasswordVisibility}
+                                                        style={{ cursor: "pointer" }}
+                                                    >
+                                                        <i className={`fa ${showPassword ? "fa-eye-slash" : "fa-eye"}`}></i>
+                                                    </span>
+                                                </div>
+
+                                                <div className="d-grid gap-2">
+                                                    <button
+                                                        className="btn btn-theme"
+                                                        type="submit"
+                                                        disabled={isLoading}
+                                                    >
+                                                        {isLoading ? (
+                                                            <>
+                                                                <i className="pi pi-spin pi-spinner me-2"></i>
+                                                                Ingresando...
+                                                            </>
+                                                        ) : (
+                                                            "Ingresar"
+                                                        )}
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
-
-                                    <div className="rllogin-rlLoginPassword">
-                                        <span className="rllogin-rlLoginUsername-pass" />
-                                        <input
-                                            id="rlLoginPassword"
-                                            className="gray-placeholder-text"
-                                            type="password"
-                                            placeholder="Contraseña"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                        />
-                                    </div>
-
-                                    {errorMsg && (
-                                        <p id="rlLoginFormErrorMessage" className="rllogin-login-from-error-msg rllogin-error">
-                                            {errorMsg}
-                                        </p>
-                                    )}
                                 </div>
-
-                                <div className="rllogin-login-container">
-                                    {
-                                        isLoading ? 
-                                        <div className="rllogin-preloader-btn" style={{ opacity: 1, margin: 0 }}>
-                                            <div className="rllogin-preloader-btn-inner">
-                                                <label>•</label>
-                                                <label>•</label>
-                                                <label>•</label>
-                                                <label>•</label>
-                                                <label>•</label>
-                                                <label>•</label>
-                                            </div>
-                                        </div> : 
-                                        <button
-                                            id="rlLoginSubmit"
-                                            type="submit"
-                                            className="rllogin-btn rllogin-btn-primary"
-                                            disabled={isLoading}
-                                        >
-                                            Iniciar sesión
-                                        </button>
-                                    }
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

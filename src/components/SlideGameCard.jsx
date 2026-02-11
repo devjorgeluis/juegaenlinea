@@ -1,4 +1,4 @@
-const LiveCasinoGameCard = (props) => {
+const SlideGameCard = (props) => {
   return (
     <div className="sc-bXnuev bSVwbU cy-live-casino-grid-item">
       <div className="sc-brMyAr jVuEJZ cy-live-casino-grid-item-inner-wrapper item-wrapper-box">
@@ -19,4 +19,4 @@ const LiveCasinoGameCard = (props) => {
   );
 };
 
-export default LiveCasinoGameCard;
+export default SlideGameCard;

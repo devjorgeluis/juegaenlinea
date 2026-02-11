@@ -4,7 +4,7 @@ import { AppContext } from "../AppContext";
 import { LayoutContext } from "../components/Layout/LayoutContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
-import LiveCasinoGameCard from "../components/LiveCasinoGameCard";
+// import LiveCasinoGameCard from "../components/LiveCasinoGameCard";
 import GameModal from "../components/Modal/GameModal";
 import ProviderModal from "../components/Modal/ProviderModal";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
@@ -436,7 +436,7 @@ const LiveCasino = () => {
             selectedProvider && selectedProvider.name ?
               <div className="live-casino-page-wrapper cy-new-live-casino">
                 <div className="sc-eJeqbO dNBrZX cy-live-casino-grid">
-                  {games.map((game) => (
+                  {/* {games.map((game) => (
                     <LiveCasinoGameCard
                       key={"popular" + game.id}
                       id={game.id}
@@ -445,7 +445,7 @@ const LiveCasino = () => {
                       imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
                       onClick={() => (isLogin ? launchGame(game, "slot", "tab") : handleLoginClick())}
                     />
-                  ))}
+                  ))} */}
                 </div>
                 <div className="my-3">
                   {isLoadingGames && <LoadApi width={60} />}
