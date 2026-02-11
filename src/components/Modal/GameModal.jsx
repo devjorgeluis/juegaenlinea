@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import LoadCasino from "../Loading/LoadCasino";
-import Img18 from "/src/assets/svg/age-18plus-round.svg";
 
 const GameModal = ({
   gameUrl,
@@ -67,7 +66,6 @@ const GameModal = ({
                 </div>
                 <span className="sc-IYxHW gxNfBt"></span>
                 <div className="sc-jDnEkQ huWxWb cy-open-responsible-gaming-button">
-                  <img src={Img18} className="sc-bKxGPP bWFDOM" />
                   <span className="sc-IYxHW gxNfBt"></span>
                 </div>
                 <span className="sc-IYxHW gxNfBt"></span>

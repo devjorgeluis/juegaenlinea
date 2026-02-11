@@ -1,18 +1,18 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
-import ImgLogo from "/src/assets/svg/logo.svg";
-import ImgHome from "/src/assets/svg/home.svg";
-import ImgCasino from "/src/assets/svg/casino.svg";
-import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
-import ImgHot from "/src/assets/svg/hot.svg";
-import ImgJoker from "/src/assets/svg/joker.svg";
-import ImgCrash from "/src/assets/svg/crash.svg";
-import ImgMegaway from "/src/assets/svg/megaway.svg";
-import ImgRuleta from "/src/assets/svg/ruleta.svg";
-import ImgDeactiveProfile from "/src/assets/svg/pre-login-reg.svg";
-import ImgProfile from "/src/assets/svg/post-login-reg.svg";
-import ImgPhone from "/src/assets/svg/phone.svg";
+// import ImgLogo from "/src/assets/svg/logo.svg";
+// import ImgHome from "/src/assets/svg/home.svg";
+// import ImgCasino from "/src/assets/svg/casino.svg";
+// import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
+// import ImgHot from "/src/assets/svg/hot.svg";
+// import ImgJoker from "/src/assets/svg/joker.svg";
+// import ImgCrash from "/src/assets/svg/crash.svg";
+// import ImgMegaway from "/src/assets/svg/megaway.svg";
+// import ImgRuleta from "/src/assets/svg/ruleta.svg";
+// import ImgDeactiveProfile from "/src/assets/svg/pre-login-reg.svg";
+// import ImgProfile from "/src/assets/svg/post-login-reg.svg";
+// import ImgPhone from "/src/assets/svg/phone.svg";
 
 const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportModal, handleLoginClick, isUserMenuOpen, setIsUserMenuOpen }) => {
     const navigate = useNavigate();
@@ -53,82 +53,82 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
 
     const isSlotsOnlyMode = isSlotsOnly === true || isSlotsOnly === "true";
 
-    const menuItems = [
-        {
-            id: "home",
-            name: "Inicio",
-            image: ImgHome,
-            href: "/",
-            subItems: [],
-        },
-        {
-            id: "casino",
-            name: "Tragamonedas",
-            image: ImgCasino,
-            href: "/casino",
-            subItems: [],
-        },
-        ...(isSlotsOnlyMode
-            ? []
-            : [
-                {
-                    id: "live-casino",
-                    name: "Casino en Vivo",
-                    image: ImgLiveCasino,
-                    href: "/live-casino",
-                    subItems: [],
-                },
-            ]),
-        {
-            id: "hot",
-            name: "Juegos Nuevos",
-            image: ImgHot,
-            href: "/casino#hot",
-            subItems: [],
-        },
-        {
-            id: "joker",
-            name: "Jokers",
-            image: ImgJoker,
-            href: "/casino#joker",
-            subItems: [],
-        },
-        {
-            id: "crash",
-            name: "Juegos de Crash",
-            image: ImgCrash,
-            href: "/casino#arcade",
-            subItems: [],
-        },
-        {
-            id: "megaway",
-            name: "Megaways",
-            image: ImgMegaway,
-            href: "/casino#megaways",
-            subItems: [],
-        },
-        {
-            id: "ruleta",
-            name: "Ruletas",
-            image: ImgRuleta,
-            href: "/casino#roulette",
-            subItems: [],
-        },
-        ...(supportParent
-            ? [
-                {
-                    id: "support",
-                    name: "Contactá a Tu Cajero",
-                    image: ImgPhone,
-                    href: "#",
-                    subItems: [],
-                    action: () => {
-                        openSupportModal(true);
-                    },
-                },
-            ]
-            : []),
-    ];
+    // const menuItems = [
+    //     {
+    //         id: "home",
+    //         name: "Inicio",
+    //         image: ImgHome,
+    //         href: "/",
+    //         subItems: [],
+    //     },
+    //     {
+    //         id: "casino",
+    //         name: "Tragamonedas",
+    //         image: ImgCasino,
+    //         href: "/casino",
+    //         subItems: [],
+    //     },
+    //     ...(isSlotsOnlyMode
+    //         ? []
+    //         : [
+    //             {
+    //                 id: "live-casino",
+    //                 name: "Casino en Vivo",
+    //                 image: ImgLiveCasino,
+    //                 href: "/live-casino",
+    //                 subItems: [],
+    //             },
+    //         ]),
+    //     {
+    //         id: "hot",
+    //         name: "Juegos Nuevos",
+    //         image: ImgHot,
+    //         href: "/casino#hot",
+    //         subItems: [],
+    //     },
+    //     {
+    //         id: "joker",
+    //         name: "Jokers",
+    //         image: ImgJoker,
+    //         href: "/casino#joker",
+    //         subItems: [],
+    //     },
+    //     {
+    //         id: "crash",
+    //         name: "Juegos de Crash",
+    //         image: ImgCrash,
+    //         href: "/casino#arcade",
+    //         subItems: [],
+    //     },
+    //     {
+    //         id: "megaway",
+    //         name: "Megaways",
+    //         image: ImgMegaway,
+    //         href: "/casino#megaways",
+    //         subItems: [],
+    //     },
+    //     {
+    //         id: "ruleta",
+    //         name: "Ruletas",
+    //         image: ImgRuleta,
+    //         href: "/casino#roulette",
+    //         subItems: [],
+    //     },
+    //     ...(supportParent
+    //         ? [
+    //             {
+    //                 id: "support",
+    //                 name: "Contactá a Tu Cajero",
+    //                 image: ImgPhone,
+    //                 href: "#",
+    //                 subItems: [],
+    //                 action: () => {
+    //                     openSupportModal(true);
+    //                 },
+    //             },
+    //         ]
+    //         : []),
+    // ];
 
     const isMenuActive = (item) => {
         const currentPath = location.pathname;
@@ -179,7 +179,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
     return (
         <>
             {/* Main Navigation */}
-            <div className="sc-gvsNSq jxqyxT cy-main-nav">
+            {/* <div className="sc-gvsNSq jxqyxT cy-main-nav">
                 <div className="sc-daLoug sc-dXijah hUcPdj bDBgJW">
                     <div className="sc-hhFrFd bCsUbK">
                         <div className="sc-yWEwC sc-bvtzcD cOhCUT bwJqBY cy-logo-container">
@@ -261,7 +261,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </>
     );
 };

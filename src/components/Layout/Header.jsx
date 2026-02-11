@@ -2,13 +2,10 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { LayoutContext } from "./LayoutContext";
-import SearchInput from "../SearchInput";
+// import SearchInput from "../SearchInput";
 import { callApi } from "../../utils/Utils";
 import ImgSports from "/src/assets/svg/sports.svg";
-import ImgProtect from "/src/assets/svg/protect.svg";
 import ImgSupport from "/src/assets/svg/support-black.svg";
-import ImgHamburger from "/src/assets/svg/hamburger.svg";
-import ImgMobileLogo from "/src/assets/svg/mobile-logo.svg";
 
 const Header = ({
     isLogin,
@@ -161,11 +158,11 @@ const Header = ({
                         <div className="sc-cMKpDi cwlnXY cy-navbar-left-container">
                             <div className="sc-kfLrBp fexPlV">
                                 <div className="sc-bHnQwI ilXINL" onClick={toggleSidebar}>
-                                    <img
+                                    {/* <img
                                         src={ImgHamburger}
                                         className="sc-bqOBqt PBviZ cy-burger-button"
                                         style={{ width: "2.6rem", height: "1.8rem" }}
-                                    />
+                                    /> */}
                                 </div>
                             </div>
                             <div className="sc-jTqEgK cxgeDG cy-navbar-separator"></div>
@@ -174,13 +171,13 @@ const Header = ({
                                     onClick={() => navigate("/")}
                                     className="sc-ciMfCw ja-dRuB"
                                 >
-                                    <img
+                                    {/* <img
                                         src={ImgMobileLogo}
                                         alt="888 Online Casino"
                                         width="39"
                                         height="30"
                                         className="sc-gHXKQl eKXwKk logo cy-logo"
-                                    />
+                                    /> */}
                                 </a>
                             </div>
                         </div>
@@ -226,7 +223,7 @@ const Header = ({
                 </>
             ) : (
                 <div className="sc-eUyqdB sc-bcaOSM luyol fHpzyA cy-navbar-container">
-                    <div className="sc-cMKpDi cwlnXY cy-navbar-left-container">
+                    {/* <div className="sc-cMKpDi cwlnXY cy-navbar-left-container">
                         <SearchInput
                             txtSearch={txtSearch}
                             setTxtSearch={setTxtSearch}
@@ -236,7 +233,7 @@ const Header = ({
                             games={games}
                             isLoadingGames={isLoadingGames}
                         />
-                    </div>
+                    </div> */}
                     <div className="sc-iKpGpX jPIDuM cy-navbar-right-container">
                         <button
                             className="button-support"
@@ -263,20 +260,6 @@ const Header = ({
                                 </div>
                                 <div className="sc-jTqEgK cxgeDG"></div>
                             </>
-                        )}
-                        {isLogin && (
-                            <button className="sc-ksJhlw jOQfJh cy-header-client-settings-button">
-                                <span className="sc-hBpigv iTELlo" onClick={handleHistoryClick}>
-                                    <img
-                                        src={ImgProtect}
-                                        style={{ width: "2.4em", height: "2.4em" }}
-                                    />
-                                </span>
-                                <div
-                                    className="sc-bjEuFB knfoyZ"
-                                    style={{ height: "2.4em" }}
-                                ></div>
-                            </button>
                         )}
                         <div className="sc-hVQvBP jXAiUk cy-welcome-component">
                             <div className="sc-eihFif hbkNIy">

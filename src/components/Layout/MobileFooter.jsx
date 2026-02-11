@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { LayoutContext } from "./LayoutContext";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
-import SearchInput from "../SearchInput";
+// import SearchInput from "../SearchInput";
 import ImgHome from "/src/assets/svg/home.svg";
 import ImgCasino from "/src/assets/svg/casino.svg";
 import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
@@ -388,7 +388,7 @@ const MobileFooter = ({
                                         </li>
                                     </div>
                                     <div className="sc-dnaMGt cselLF cy-game-search-box cy-menu-links-group">
-                                        <ul className="sc-caJMrc goXKGs cy-menu-item">
+                                        {/* <ul className="sc-caJMrc goXKGs cy-menu-item">
                                             <SearchInput
                                                 txtSearch={txtSearch}
                                                 setTxtSearch={setTxtSearch}
@@ -398,7 +398,7 @@ const MobileFooter = ({
                                                 games={games}
                                                 isLoadingGames={isLoadingGames}
                                             />
-                                        </ul>
+                                        </ul> */}
                                     </div>
                                     {!isSearchActive && (
                                         <section className="sc-klCKcm sc-kZzZex eLAEaM jdUfX">

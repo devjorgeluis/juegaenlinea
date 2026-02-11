@@ -5,12 +5,10 @@ import { Navigation, Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import ImgBanner1 from "/src/assets/img/banner1.jpg";
-import ImgBanner2 from "/src/assets/img/banner2.jpg";
-import ImgBanner3 from "/src/assets/img/banner3.jpg";
-import ImgBanner4 from "/src/assets/img/banner4.jpg";
-import ImgBanner5 from "/src/assets/img/banner5.jpg";
-import ImgBanner6 from "/src/assets/img/banner6.jpg";
+import ImgBanner1 from "/src/assets/img/slider-1.png";
+import ImgBanner2 from "/src/assets/img/slider-2.png";
+import ImgBanner3 from "/src/assets/img/slider-3.png";
+import ImgBanner4 from "/src/assets/img/slider-4.png";
 
 const Slideshow = () => {
   const swiperRef = useRef(null);
@@ -22,8 +20,6 @@ const Slideshow = () => {
     { id: 1, image: ImgBanner2 },
     { id: 2, image: ImgBanner3 },
     { id: 3, image: ImgBanner4 },
-    { id: 4, image: ImgBanner5 },
-    { id: 5, image: ImgBanner6 },
   ];
 
   const handleSlideChange = (swiper) => {

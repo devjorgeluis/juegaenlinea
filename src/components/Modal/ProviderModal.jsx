@@ -1,4 +1,4 @@
-import IconClose from "/src/assets/svg/close.svg";
+// import IconClose from "/src/assets/svg/close.svg";
 
 const ProviderModal = ({
     isOpen,
@@ -15,7 +15,7 @@ const ProviderModal = ({
                     <div className="sc-dOOUYo jbbHxq">
                         <div className="sc-dGRuPc ebEyDd">Filtrar por</div>
                         <div className="cy-close-advanced-filters-x-button" onClick={onClose}>
-                            <img src={IconClose} style={{ width: "2.4rem", height: "2.4rem" }} />
+                            {/* <img src={IconClose} style={{ width: "2.4rem", height: "2.4rem" }} /> */}
                         </div>
                     </div>
                     <div className="sc-gSXHT iEojAo">

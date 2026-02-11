@@ -1,6 +1,6 @@
 import { useOutletContext, useNavigate } from "react-router-dom";
-import ImgCasino from "/src/assets/img/footer-888cas.png";
-import ImgSports from "/src/assets/img/footer-888spo.png";
+// import ImgCasino from "/src/assets/img/footer-888cas.png";
+// import ImgSports from "/src/assets/img/footer-888spo.png";
 
 const Footer = () => {
     const navigate = useNavigate();
@@ -98,7 +98,7 @@ const Footer = () => {
                                                     <a><span>2 productos, 1 cuenta</span></a>
                                                 </span>
                                             </div>
-                                            <div className="accordion-content">
+                                            {/* <div className="accordion-content">
                                                 <ul className="link-list">
                                                     <li className="link-item" onClick={() => navigate("/casino")}>
                                                         <a>
@@ -114,7 +114,7 @@ const Footer = () => {
                                                         </li>
                                                     }
                                                 </ul>
-                                            </div>
+                                            </div> */}
                                         </div>
                                     </div>
                                 </div>

@@ -3,8 +3,8 @@ import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
 import LoadApi from "../../components/Loading/LoadApi";
-import ImgArrowLeft from "/src/assets/svg/arrow-left.svg";
-import ImgArrowRight from "/src/assets/svg/arrow-right.svg";
+// import ImgArrowLeft from "/src/assets/svg/arrow-left.svg";
+// import ImgArrowRight from "/src/assets/svg/arrow-right.svg";
 
 const ProfileTransaction = () => {
     const navigate = useNavigate();
@@ -218,7 +218,7 @@ const ProfileTransaction = () => {
                                                 de <span className="font-medium">{pagination.totalRecords}</span> resultados
                                             </p>
                                         </div>
-                                        <nav className="text-center" aria-label="Pagination">
+                                        {/* <nav className="text-center" aria-label="Pagination">
                                             <button
                                                 onClick={handlePrevPage}
                                                 disabled={pagination.currentPage === 1}
@@ -244,7 +244,7 @@ const ProfileTransaction = () => {
                                             >
                                                 <img src={ImgArrowRight} />
                                             </button>
-                                        </nav>
+                                        </nav> */}
                                     </div>
                                 </div>
                             )}

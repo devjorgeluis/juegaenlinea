@@ -12,7 +12,6 @@ import ProviderContainer from "../components/ProviderContainer";
 import Footer from "../components/Layout/Footer";
 import LoadApi from "../components/Loading/LoadApi";
 import LoginModal from "../components/Modal/LoginModal";
-import ImgHero from "/src/assets/svg/girl.svg";
 import "animate.css";
 
 let selectedGameId = null;
@@ -425,9 +424,6 @@ const LiveCasino = () => {
       {/* Only show LiveCasino content when game modal is NOT shown */}
       {!shouldShowGameModal && (
         <div className="casino">
-          {
-            !isMobile && <img src={ImgHero} style={{ width: "100%", height: "100%" }} />
-          }
           <ProviderContainer
             categories={categories}
             selectedProvider={selectedProvider}

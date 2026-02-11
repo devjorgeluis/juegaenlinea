@@ -1,4 +1,4 @@
-import IconFilter from "/src/assets/svg/filter.svg";
+// import IconFilter from "/src/assets/svg/filter.svg";
 
 const ProviderContainer = ({
     onOpenProviders
@@ -15,7 +15,7 @@ const ProviderContainer = ({
                             className="sc-bKhVx kBwCyY cy-open-filters-button"
                             onClick={(e) => { e.preventDefault(); if (onOpenProviders) onOpenProviders(); }} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (onOpenProviders) onOpenProviders(); } }}
                         >
-                            <img src={IconFilter} className="sc-bqOBqt PBviZ cy-filter-icon" style={{ width: "1.6rem", height: "1.6rem" }} />
+                            {/* <img src={IconFilter} className="sc-bqOBqt PBviZ cy-filter-icon" style={{ width: "1.6rem", height: "1.6rem" }} /> */}
                         </a>
                     </div>
                 </h1>

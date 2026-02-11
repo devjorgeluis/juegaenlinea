@@ -7,7 +7,7 @@ import { callApi } from "../utils/Utils";
 import Footer from "../components/Layout/Footer";
 import GameCard from "/src/components/GameCard";
 import CategoryContainer from "../components/CategoryContainer";
-import Slideshow from "../components/Casino/Slideshow";
+// import Slideshow from "../components/Casino/Slideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameModal from "../components/Modal/GameModal";
 import LoadApi from "../components/Loading/LoadApi";
@@ -17,11 +17,11 @@ import "animate.css";
 import ImgHome from "/src/assets/svg/home.svg";
 import ImgCasino from "/src/assets/svg/casino.svg";
 import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
-import ImgHot from "/src/assets/svg/hot.svg";
-import ImgJoker from "/src/assets/svg/joker.svg";
-import ImgCrash from "/src/assets/svg/crash.svg";
-import ImgMegaway from "/src/assets/svg/megaway.svg";
-import ImgRuleta from "/src/assets/svg/ruleta.svg";
+// import ImgHot from "/src/assets/svg/hot.svg";
+// import ImgJoker from "/src/assets/svg/joker.svg";
+// import ImgCrash from "/src/assets/svg/crash.svg";
+// import ImgMegaway from "/src/assets/svg/megaway.svg";
+// import ImgRuleta from "/src/assets/svg/ruleta.svg";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -126,18 +126,18 @@ const Casino = () => {
     const isSlotsOnlyFalse = isSlotsOnly === false || isSlotsOnly === "false";
     let tmpTags = isSlotsOnlyFalse
       ? [
-        { name: "Lobby", code: "home", image: ImgHome },
-        { name: "Juegos Nuevos", code: "hot", image: ImgHot },
-        { name: "Jokers", code: "joker", image: ImgJoker },
-        { name: "Juegos de crash", code: "arcade", image: ImgCrash },
-        { name: "Megaways", code: "megaways", image: ImgMegaway },
-        { name: "Ruletas", code: "roulette", image: ImgRuleta },
+        { name: "Lobby", code: "home" },
+        { name: "Juegos Nuevos", code: "hot" },
+        { name: "Jokers", code: "joker" },
+        { name: "Juegos de crash", code: "arcade" },
+        { name: "Megaways", code: "megaways" },
+        { name: "Ruletas", code: "roulette" },
       ]
       : [
-        { name: "Lobby", code: "home", image: ImgHome },
-        { name: "Juegos Nuevos", code: "hot", image: ImgHot },
-        { name: "Jokers", code: "joker", image: ImgJoker },
-        { name: "Megaways", code: "megaways", image: ImgMegaway },
+        { name: "Lobby", code: "home" },
+        { name: "Juegos Nuevos", code: "hot" },
+        { name: "Jokers", code: "joker" },
+        { name: "Megaways", code: "megaways" },
       ];
 
     setTags(tmpTags);
@@ -402,7 +402,7 @@ const Casino = () => {
       ) : (
         <>
           <div className="casino">
-            <Slideshow />
+            {/* <Slideshow /> */}
             
             {
               isMobile &&

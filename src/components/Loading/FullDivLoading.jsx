@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import ImgSplash from "/src/assets/img/splash_logo.png";
+// import ImgSplash from "/src/assets/img/splash_logo.png";
 
 const FullDivLoading = (props) => {
   useEffect(() => {
@@ -15,10 +15,10 @@ const FullDivLoading = (props) => {
 
   return (
     <div id="splash-page" className="d-none">
-      <div 
+      {/* <div 
         className="splash-brand" 
         style={{backgroundImage: `url(${ImgSplash})`}}
-      ></div>
+      ></div> */}
     </div>
   );
 };

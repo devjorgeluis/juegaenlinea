@@ -6,8 +6,8 @@ import { Navigation } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import GameCard from '../GameCard';
-import IconArrowLeft from "/src/assets/svg/arrow-left.svg";
-import IconArrowRight from "/src/assets/svg/arrow-right.svg";
+// import IconArrowLeft from "/src/assets/svg/arrow-left.svg";
+// import IconArrowRight from "/src/assets/svg/arrow-right.svg";
 
 const HotGameSlideshow = ({ games, name, title, onGameClick }) => {
     const { contextData } = useContext(AppContext);
@@ -27,7 +27,7 @@ const HotGameSlideshow = ({ games, name, title, onGameClick }) => {
             <div className="sc-kAuobC hvWNQq cy-games-list-title">
                 <div className="sc-cbRazL kytqOW cy-games-title-text">{title}</div>
                 <div className="sc-fEyyHY inSENM"></div>
-                {
+                {/* {
                     !isMobile &&
                     <div className="sc-iNjjOV kuICQf cy-swiper-buttons">
                         <div className="sc-cLVkoy gTiEhq">
@@ -55,7 +55,7 @@ const HotGameSlideshow = ({ games, name, title, onGameClick }) => {
                             </button>
                         </div>
                     </div>
-                }
+                } */}
             </div>
             <div className="sc-hAHgYv faMpiy cy-orbit-swiper-wrapper">
                 {
