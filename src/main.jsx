@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import AppContextProvider from './AppContext.jsx'
 
 import './css/swiper.min.css'
+import './css/main.css'
 import './css/entry.css'
 import './css/loading.css'
 import './css/button.css'
@@ -22,6 +23,7 @@ import './css/completeProfile.css'
 import './css/iframe.css'
 import './css/emptyWithHeader.css'
 import './css/default.css'
+import './css/lobby.css'
 
 
 import App from './App.jsx'
