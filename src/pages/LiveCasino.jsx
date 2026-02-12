@@ -12,7 +12,6 @@ import ProviderContainer from "../components/ProviderContainer";
 import Footer from "../components/Layout/Footer";
 import LoadApi from "../components/Loading/LoadApi";
 import LoginModal from "../components/Modal/LoginModal";
-import "animate.css";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -24,7 +23,7 @@ let pageCurrent = 0;
 const LiveCasino = () => {
   const pageTitle = "Casino en Vivo";
   const { contextData } = useContext(AppContext);
-  const { isLogin } = useContext(LayoutContext);
+  const { isLogin, txtSearch, setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
   const { setShowFullDivLoading } = useContext(NavigationContext);
   const navigate = useNavigate();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
@@ -280,12 +279,14 @@ const LiveCasino = () => {
     if (result.status === 500 || result.status === 422) {
       setIsLoadingGames(false);
     } else {
+      configureImageSrc(result);
+      
       if (pageCurrent == 0) {
-        configureImageSrc(result);
         setGames(result.content);
+        setSearchGames(result.content);
       } else {
-        configureImageSrc(result);
         setGames([...games, ...result.content]);
+        setSearchGames([...searchGames, ...result.content]);
       }
       pageCurrent += 1;
     }
@@ -352,6 +353,12 @@ const LiveCasino = () => {
         setSelectedCategoryIndex(0);
         setGames([]);
         setFirstFiveCategoriesGames([]);
+        
+        setTxtSearch('');
+        document.body.classList.remove('hc-opened-search');
+        setSearchGames([]);
+        setIsProviderSelected(false);
+        
         const firstFiveCategories = categories.slice(1, 6);
         if (firstFiveCategories.length > 0) {
           pendingCategoryFetchesRef.current = firstFiveCategories.length;
@@ -365,8 +372,22 @@ const LiveCasino = () => {
         navigate("/live-casino#home");
         lastLoadedCategoryRef.current = null;
       } else {
+        // Selecting a provider
         setSelectedProvider(provider);
         setIsSingleCategoryView(true);
+        
+        // Set search text to provider name
+        setTxtSearch(provider.name || '');
+        
+        // Mark that provider is selected to disable search input
+        setIsProviderSelected(true);
+        
+        // Open the search UI
+        document.body.classList.add('hc-opened-search');
+        
+        // Clear existing search games to show loading state
+        setSearchGames([]);
+        
         const providerIndex = categories.findIndex(cat => cat.id === provider.id);
         setActiveCategory(provider);
         setSelectedCategoryIndex(providerIndex !== -1 ? providerIndex : index);
@@ -374,6 +395,7 @@ const LiveCasino = () => {
         lastLoadedCategoryRef.current = provider.code;
       }
     } else if (!provider && categories.length > 0) {
+      // No provider selected - reset to lobby
       const firstCategory = categories[0];
       setSelectedProvider(null);
       setIsSingleCategoryView(false);
@@ -381,6 +403,13 @@ const LiveCasino = () => {
       setSelectedCategoryIndex(0);
       setGames([]);
       setFirstFiveCategoriesGames([]);
+      
+      // Clear search state
+      setTxtSearch('');
+      document.body.classList.remove('hc-opened-search');
+      setSearchGames([]);
+      setIsProviderSelected(false);
+      
       const firstFiveCategories = categories.slice(1, 6);
       if (firstFiveCategories.length > 0) {
         pendingCategoryFetchesRef.current = firstFiveCategories.length;

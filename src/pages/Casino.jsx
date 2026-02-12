@@ -6,22 +6,12 @@ import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
 import Footer from "../components/Layout/Footer";
 import GameCard from "/src/components/GameCard";
-import CategoryContainer from "../components/CategoryContainer";
 import Slideshow from "../components/Casino/Slideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameModal from "../components/Modal/GameModal";
 import LoadApi from "../components/Loading/LoadApi";
 import LoginModal from "../components/Modal/LoginModal";
-import "animate.css";
-
-import ImgHome from "/src/assets/svg/home.svg";
-import ImgCasino from "/src/assets/svg/casino.svg";
-import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
-// import ImgHot from "/src/assets/svg/hot.svg";
-// import ImgJoker from "/src/assets/svg/joker.svg";
-// import ImgCrash from "/src/assets/svg/crash.svg";
-// import ImgMegaway from "/src/assets/svg/megaway.svg";
-// import ImgRuleta from "/src/assets/svg/ruleta.svg";
+import ProviderContainer from "../components/ProviderContainer";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -33,7 +23,7 @@ let pageCurrent = 0;
 const Casino = () => {
   const pageTitle = "Casino";
   const { contextData } = useContext(AppContext);
-  const { isLogin } = useContext(LayoutContext);
+  const { isLogin, txtSearch, setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
   const { setShowFullDivLoading } = useContext(NavigationContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [tags, setTags] = useState([]);
@@ -269,7 +259,7 @@ const Casino = () => {
   };
 
   const fetchContent = (category, categoryId, tableName, categoryIndex, resetCurrentPage, pageGroupCode) => {
-    let pageSize = 30;
+    let pageSize = 500;
     setIsLoadingGames(true);
 
     if (resetCurrentPage) {
@@ -303,14 +293,20 @@ const Casino = () => {
 
   const callbackFetchContent = (result) => {
     if (result.status === 500 || result.status === 422) {
-
+      setIsLoadingGames(false);
     } else {
       configureImageSrc(result);
       const newGames = result.content || [];
 
-      setGames((prevGames) => {
-        return pageCurrent === 0 ? newGames : [...prevGames, ...newGames];
-      });
+      if (pageCurrent === 0) {
+        setGames(newGames);
+        // ALWAYS set search games immediately
+        setSearchGames(newGames);
+      } else {
+        setGames((prevGames) => [...prevGames, ...newGames]);
+        // Also update search games for pagination
+        setSearchGames((prevGames) => [...prevGames, ...newGames]);
+      }
 
       if (newGames.length > 0) {
         pageCurrent += 1;
@@ -369,9 +365,47 @@ const Casino = () => {
     setShowLoginModal(false);
   };
 
-  const handleCategorySelect = (category) => {
-    setActiveCategory(category);
-    setSelectedProvider(null);
+  const handleProviderSelect = (provider, index = 0) => {
+    setSelectedProvider(provider);
+
+    if (provider) {
+      // Open the search UI
+      document.body.classList.add('hc-opened-search');
+      
+      // Set the search text to provider name
+      setTxtSearch(provider.name || '');
+      
+      // Mark that provider is selected to disable search input
+      setIsProviderSelected(true);
+
+      // Clear existing search games to show loading state
+      setSearchGames([]);
+      
+      fetchContent(
+        provider,
+        provider.id,
+        provider.table_name,
+        index,
+        true
+      );
+
+      if (isMobile) {
+        setMobileShowMore(true);
+      }
+    } else {
+      // Clear search when deselecting provider
+      setTxtSearch('');
+      document.body.classList.remove('hc-opened-search');
+      setSearchGames([]);
+      
+      // Enable search input again
+      setIsProviderSelected(false);
+      
+      const firstCategory = categories[0];
+      if (firstCategory) {
+        fetchContent(firstCategory, firstCategory.id, firstCategory.table_name, 0, true);
+      }
+    }
   };
 
   return (
@@ -481,6 +515,13 @@ const Casino = () => {
               </div>
             )}
           </div> */}
+
+          <ProviderContainer
+            categories={categories}
+            selectedProvider={selectedProvider}
+            setSelectedProvider={setSelectedProvider}
+            onProviderSelect={handleProviderSelect}
+          />
 
           <Footer />
         </>

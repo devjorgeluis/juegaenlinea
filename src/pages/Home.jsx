@@ -21,7 +21,7 @@ let pageCurrent = 0;
 const Home = () => {
   const { contextData } = useContext(AppContext);
   const { setShowFullDivLoading } = useContext(NavigationContext);
-  const { txtSearch, setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
+  const { setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [topGames, setTopGames] = useState([]);
   const [topArcade, setTopArcade] = useState([]);
@@ -164,7 +164,7 @@ const Home = () => {
   };
 
   const fetchContent = (category, categoryId, tableName, categoryIndex, resetCurrentPage, pageGroupCode) => {
-    let pageSize = 30;
+    let pageSize = 500;
     setIsLoadingGames(true);
 
     if (resetCurrentPage) {
@@ -368,7 +368,7 @@ const Home = () => {
         fetchContent(firstCategory, firstCategory.id, firstCategory.table_name, 0, true);
       }
     }
-  };  
+  };
 
   return (
     <div className="main-page">
