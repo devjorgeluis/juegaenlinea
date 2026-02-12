@@ -20,6 +20,14 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
     const [currentTime, setCurrentTime] = useState("");
 
     useEffect(() => {
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'auto'
+        });
+    }, [location.pathname, location.hash]);
+
+    useEffect(() => {
         const currentPath = location.pathname;
         const hash = location.hash.slice(1);
 
@@ -29,6 +37,10 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
 
         if (currentPath.startsWith("/profile") && !isMenuExpanded("profile")) {
             setExpandedMenus((prev) => [...prev, "profile"]);
+        }
+
+        if (currentPath.startsWith("/casino") && hash && !isMenuExpanded("casino")) {
+            setExpandedMenus((prev) => [...prev, "casino"]);
         }
     }, [location.pathname, location.hash]);
 
@@ -66,6 +78,14 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
             name: "Casino",
             image: ImgCasino,
             href: "/casino",
+            subItems: [
+                { name: "Lobby", href: "/casino#home", image: "fa-solid fa-crown" },
+                { name: "Juegos Nuevos", href: "/casino#hot", image: "fa-solid fa-fire" },
+                { name: "Jokers", href: "/casino#joker", image: "fa-solid fa-diamond" },
+                { name: "Juegos de Crash", href: "/casino#arcade", image: "fa-solid fa-gamepad" },
+                { name: "Megaways", href: "/casino#megaways", image: "fa-solid fa-dice" },
+                { name: "Ruletas", href: "/casino#roulette", image: "fa-solid fa-trophy" },
+            ],
         },
         ...(isSlotsOnlyMode
             ? []
@@ -86,7 +106,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
                     id: "live-sports",
                     name: "Deportes en vivo",
                     image: ImgLiveSports,
-                    href: "/live-sports",
+                    href: "/live-sports"
                 },
             ]),
         ...(supportParent
@@ -108,7 +128,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
         const currentPath = location.pathname;
         const currentHash = location.hash;
 
-        if (item.href.includes("#")) {
+        if (item.href && item.href.includes("#")) {
             return location.pathname + location.hash === item.href;
         }
 
@@ -123,42 +143,97 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
         return false;
     };
 
-    const toggleUserMenu = () => {
-        setIsUserMenuOpen(!isUserMenuOpen);
+    const isSubItemActive = (subItem) => {
+        return location.pathname + location.hash === subItem.href;
     };
 
     const closeUserMenu = () => {
         setIsUserMenuOpen(false);
     };
 
-    const handleMenuClick = (href, item) => {
-        closeUserMenu();
-        console.log(item);
-
-        if (item && item.action) {
-            item.action();
-        } else {
-            navigate(href);
+    const handleMenuClick = (href, item, e) => {
+        e.preventDefault();
+        
+        if (item && item.subItems) {
+            e.stopPropagation();
+            toggleSubmenu(item.id);
+            return;
         }
+        
+        if (item && item.action) {
+            closeUserMenu();
+            item.action();
+            return;
+        }
+        
+        if (href && href !== "#") {
+            closeUserMenu();
+            
+            if (href === location.pathname + location.hash) {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'auto'
+                });
+            } else {
+                navigate(href);
+            }
+        }
+    };
+
+    const toggleSubmenu = (menuId) => {
+        setExpandedMenus((prev) => 
+            prev.includes(menuId) 
+                ? prev.filter(id => id !== menuId)
+                : [...prev, menuId]
+        );
+    };
+
+    const handleSubItemClick = (href, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeUserMenu();
+        
+        navigate(href);
+        
+        setTimeout(() => {
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'auto'
+            });
+        }, 0);
     };
 
     const handleHamburgerClick = () => {
         document.body.classList.toggle('sideDiff');
     };
 
+    const handleLogoClick = (e) => {
+        e.preventDefault();
+        closeUserMenu();
+        navigate("/");
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'auto'
+        });
+    };
+
     return (
         <>
             <div className="sidebar">
                 <div className="sidebar-head d-flex">
-                    <button className="btn btn-sidebar btn-action-sidebar" onClick={() => handleHamburgerClick()}>
+                    <button className="btn btn-sidebar btn-action-sidebar" onClick={handleHamburgerClick}>
                         <i className="fa-solid fa-bars"></i>
                     </button>
 
                     <a
-                        onClick={() => navigate("/")}
+                        onClick={handleLogoClick}
                         className="sidebar-logo"
+                        href="/"
                     >
-                        <img alt="" src={ImgLogo} />
+                        <img alt="Logo" src={ImgLogo} />
                     </a>
                 </div>
 
@@ -174,21 +249,66 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
 
                         <div className="sidebar-item-list">
                             <div>
-                                {menuItems.map((item, index) => {
+                                {menuItems.map((item) => {
                                     const itemRef = (el) => (iconRefs.current[item.id] = el);
                                     const isActive = isMenuActive(item);
+                                    const isExpanded = isMenuExpanded(item.id);
+                                    const hasSubItems = item.subItems && item.subItems.length > 0;
 
                                     return (
                                         <div className="sidebar-item" ref={itemRef} key={item.id}>
                                             <a
-                                                onClick={() => handleMenuClick(item.href, item)}
-                                                className={`btn ${isActive ? "btn-featured" : ""}`}
+                                                href={item.href}
+                                                onClick={(e) => handleMenuClick(item.href, item, e)}
+                                                className={`btn ${isActive ? "btn-featured" : ""} ${hasSubItems ? "has-submenu" : ""}`}
                                             >
                                                 <span className="sidebar-item-icon">
-                                                    <img src={item.image} />
+                                                    <img src={item.image} alt={item.name} />
                                                 </span>
                                                 <span className="sidebar-item-name">{item.name}</span>
+                                                {hasSubItems && (
+                                                    <span 
+                                                        className={`sidebar-item-collapse ${isExpanded ? 'expanded' : ''}`}
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            e.stopPropagation();
+                                                            toggleSubmenu(item.id);
+                                                        }}
+                                                    >
+                                                        <span className="more">
+                                                            <i className={`fa-solid ${isExpanded ? "fa-minus" : "fa-plus"}`}></i>
+                                                        </span>
+                                                        <span className="minus">
+                                                            <i className="fa-solid fa-minus"></i>
+                                                        </span>
+                                                    </span>
+                                                )}
                                             </a>
+                                            {hasSubItems && (
+                                                <div className={`collapse ${isExpanded ? 'show' : ''}`} id={`collapse-${item.id}`}>
+                                                    <div className="card card-body">
+                                                        <ul>
+                                                            {item.subItems.map((subItem, subIndex) => {
+                                                                const isSubActive = isSubItemActive(subItem);
+                                                                return (
+                                                                    <li key={subIndex}>
+                                                                        <a 
+                                                                            href={subItem.href}
+                                                                            onClick={(e) => handleSubItemClick(subItem.href, e)}
+                                                                            className={isSubActive ? 'active' : ''}
+                                                                        >
+                                                                            <span className="a-icon">
+                                                                                <i className={subItem.image}></i>
+                                                                            </span>
+                                                                            <span className="a-name">{subItem.name}</span>
+                                                                        </a>
+                                                                    </li>
+                                                                );
+                                                            })}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     );
                                 })}
@@ -201,7 +321,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
                             <div className="sidebar-time">
                                 <div className="sidebar-time-ex">
                                     <div className="sidebar-time-figure">
-                                        <img src={ImgTime} />
+                                        <img src={ImgTime} alt="time" />
                                     </div>
 
                                     <div className="sidebar-time-text">
@@ -216,6 +336,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
                                 <a
                                     href="https://www.instagram.com/juegaenlinea/"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                 >
                                     <i className="fa-brands fa-instagram"></i>
                                 </a>
@@ -223,6 +344,7 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
                                 <a
                                     href="https://www.facebook.com/juegaenlineacom/"
                                     target="_blank"
+                                    rel="noopener noreferrer"
                                 >
                                     <i className="fa-brands fa-facebook"></i>
                                 </a>

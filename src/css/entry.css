@@ -24598,7 +24598,7 @@ header .header-wrapper .container-h .header-right .btn.btn-h-custom.btn-h-custom
 
 .sidebar .sidebar-body .sidebar-body-ex .sidebar-item-list .sidebar-item .sidebar-item-collapse:focus,
 .sidebar .sidebar-body .sidebar-body-ex .sidebar-item-list .sidebar-item .sidebar-item-collapse:hover {
-    background: #363a4b
+    /* background: #363a4b */
 }
 
 .sidebar .sidebar-body .sidebar-body-ex .sidebar-item-list .sidebar-item .sidebar-item-collapse .minus {
@@ -29098,7 +29098,8 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     display: block;
     overflow: hidden;
     position: relative;
-    width: 100%
+    width: 100%;
+    min-height: 215px;
 }
 
 .jel-slider-default-five .jel-slider-default-five-ex .swiper-container .swiper-wrapper .swiper-slide a .a-hover {
@@ -29134,6 +29135,10 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     .jel-slider-default-five .jel-slider-default-five-ex .swiper-container .swiper-wrapper .swiper-slide a .a-hover .a-hover-title {
         font-size: 16px;
         font-size: 13px
+    }
+
+    .jel-slider-default-five .jel-slider-default-five-ex .swiper-container .swiper-wrapper .swiper-slide a {
+        min-height: 150px;
     }
 }
 
@@ -29824,10 +29829,6 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     .jel-slider-default-seven .jel-slider-default-seven-ex {
         padding-right: 0
     }
-}
-
-.jel-games-module {
-    margin: 25px 0
 }
 
 .jel-games-module .jel-games-module-ex {
@@ -37747,19 +37748,31 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     position: relative
 }
 
-.float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+.float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+.casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
     display: grid;
     grid-auto-flow: row dense;
     grid-template-columns: repeat(8, 1fr);
     margin-left: -5px;
     margin-right: -5px;
-    max-height: 427px;
     overflow: auto
 }
 
+.float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    max-height: 427px;
+}
+
+.casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    max-height: auto;
+}
+
 @media screen and (max-width:1379px) {
-    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+    .casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         grid-template-columns: repeat(7, 1fr);
+    }
+
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         max-height: 387px
     }
 }
@@ -37771,36 +37784,56 @@ html.chat-opened body .custom-chat .custom-chat-expand {
 }
 
 @media screen and (max-width:991px) {
-    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+    .casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         grid-template-columns: repeat(6, 1fr);
+    }
+
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         max-height: 387px
     }
 }
 
 @media screen and (max-width:767px) {
-    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+    .casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         grid-template-columns: repeat(5, 1fr);
+    }
+
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         max-height: 374px
     }
 }
 
 @media screen and (max-width:679px) {
-    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+    .casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         max-height: 405px
     }
 }
 
 @media screen and (max-width:539px) {
-    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+    .casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         grid-template-columns: repeat(3, 1fr);
+    }
+
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         max-height: 423px
     }
 }
 
 @media screen and (max-width:419px) {
-    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex,
+    .casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .float-casino .float-casino-wrapper .float-casino-search-body .float-casino-search-body-ex {
         max-height: 471px
     }
 }
