@@ -474,7 +474,9 @@ const Layout = () => {
                             isUserMenuOpen={isUserMenuOpen}
                             setIsUserMenuOpen={setIsUserMenuOpen}
                         />
-                        <Outlet context={{ isSlotsOnly, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
+                        <div className="wrapper">
+                            <Outlet context={{ isSlotsOnly, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
+                        </div>
                     </div>
                 </div>
 
