@@ -8,6 +8,7 @@ import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
 import ImgSports from "/src/assets/svg/sports.svg";
 import ImgLiveSports from "/src/assets/img/deslizalo.png";
 import ImgTime from "/src/assets/img/time-animate2.png";
+import ImgPhone from "/src/assets/svg/phone.svg";
 
 const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportModal, isUserMenuOpen, setIsUserMenuOpen }) => {
     const navigate = useNavigate();
