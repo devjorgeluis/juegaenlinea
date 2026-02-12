@@ -478,7 +478,7 @@ header .header-events .careerHeader .contentCareer .topScore {
 }
 
 .game-iframe-view_gameIframeWrapper.game-iframe-view_sportbook {
-    height: calc(100vh - 49px) !important;
+    height: calc(100vh - 68px) !important;
     min-height: 100%;
     max-width: 100%;
     height: 100%
@@ -486,7 +486,7 @@ header .header-events .careerHeader .contentCareer .topScore {
 
 @media(max-width: 992px) {
     .game-iframe-view_gameIframeWrapper.game-iframe-view_sportbook {
-        top: 45px;
+        top: 63px;
         z-index: 999;
         height: 100% !important
     }

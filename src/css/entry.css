@@ -23644,16 +23644,6 @@ b {
     .sideDiff .wrapper {
         padding-left: 65px
     }
-
-    .wrapper {
-        min-height: 1000px
-    }
-}
-
-@media screen and (min-width:1900px) {
-    .wrapper {
-        min-height: 1800px
-    }
 }
 
 @media screen and (max-width:1199px) {

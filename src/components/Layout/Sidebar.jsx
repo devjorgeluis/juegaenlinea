@@ -142,11 +142,15 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
         }
     };
 
+    const handleHamburgerClick = () => {
+        document.body.classList.toggle('sideDiff');
+    };
+
     return (
         <>
             <div className="sidebar">
                 <div className="sidebar-head d-flex">
-                    <button className="btn btn-sidebar btn-action-sidebar">
+                    <button className="btn btn-sidebar btn-action-sidebar" onClick={() => handleHamburgerClick()}>
                         <i className="fa-solid fa-bars"></i>
                     </button>
 

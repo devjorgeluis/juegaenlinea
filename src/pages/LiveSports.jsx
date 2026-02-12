@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { AppContext } from "../AppContext";
 import { callApi } from "../utils/Utils";
-import LoadApi from "../components/Loading/LoadApi";
 import "animate.css";
 
 const LiveSports = () => {
@@ -16,6 +15,7 @@ const LiveSports = () => {
 
     useEffect(() => {
         loadSportsPage();
+        document.body.classList.add('sideDiff');
     }, [location.pathname]);
 
     const loadSportsPage = () => {
@@ -36,9 +36,7 @@ const LiveSports = () => {
     return (
         <>
             {isLoading ? (
-                <div className="loading-page">
-                    <LoadApi />
-                </div>
+                <></>
             ) : sportsEmbedUrl ? (
                 <div className="game-iframe-view_gameIframeWrapper game-iframe-view_sportbook">
                     <iframe
