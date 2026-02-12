@@ -52,14 +52,9 @@ const SearchInput = ({
         if (isMobile) {
             setShowMobileSearch(true);
         }
-        // Re-show dropdown if there's already content
         if (txtSearch.trim() !== "") {
             setIsDropdownVisible(true);
         }
-    };
-
-    const handleLoginClick = () => {
-        setShowLoginModal(true);
     };
 
     const handleLoginConfirm = () => {
@@ -67,25 +62,17 @@ const SearchInput = ({
     };
 
     const handleCloseSearch = () => {
-        // Clear the search input
         setTxtSearch("");
-        
-        // Remove all games
         setGames([]);
-        
-        // Stop loading state
         setIsLoadingGames(false);
         
-        // Cancel any pending API request
         if (searchDelayTimer) {
             clearTimeout(searchDelayTimer);
             setSearchDelayTimer(null);
         }
         
-        // Remove the body class to close the search overlay
         document.body.classList.remove('hc-opened-search');
         
-        // Clear the input field focus
         if (searchRef.current) {
             searchRef.current.blur();
         }

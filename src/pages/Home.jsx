@@ -6,6 +6,7 @@ import { callApi } from "../utils/Utils";
 import Footer from "../components/Layout/Footer";
 import Slideshow from "../components/Home/Slideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
+import ProviderContainer from "../components/ProviderContainer";
 import GameModal from "../components/Modal/GameModal";
 import LoginModal from "../components/Modal/LoginModal";
 
@@ -24,9 +25,14 @@ const Home = () => {
   const [topArcade, setTopArcade] = useState([]);
   const [topCasino, setTopCasino] = useState([]);
   const [topLiveCasino, setTopLiveCasino] = useState([]);
+  const [games, setGames] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [mainCategories, setMainCategories] = useState([]);  
   const [selectedProvider, setSelectedProvider] = useState(null);
   const [pageData, setPageData] = useState({});
   const [gameUrl, setGameUrl] = useState("");
+  const [categoryType, setCategoryType] = useState("");
+  const [isLoadingGames, setIsLoadingGames] = useState(false);
   const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
   const refGameModal = useRef();
   const pendingPageRef = useRef(new Set());
@@ -98,6 +104,8 @@ const Home = () => {
     pendingPageRef.current.add(page);
 
     setShowFullDivLoading(true);
+    setCategories([]);
+    setGames([]);    
 
     callApi(contextData, "GET", "/get-page?page=" + page, (result) => callbackGetPage(result, page), null);
   };
@@ -117,10 +125,16 @@ const Home = () => {
     }
     lastProcessedPageRef.current = { page, ts: now };
 
+    setCategoryType(result.data?.page_group_type);
     setSelectedProvider(null);
     setPageData(result.data);
 
     if (result.data && result.data.page_group_type === "categories" && result.data.categories && result.data.categories.length > 0) {
+      setCategories(result.data.categories);
+      if (page === "home") {
+        setMainCategories(result.data.categories);
+      }
+      
       const firstFiveCategories = result.data.categories.slice(0, 5);
       if (firstFiveCategories.length > 0) {
         pendingCategoryFetchesRef.current = firstFiveCategories.length;
@@ -130,6 +144,7 @@ const Home = () => {
         });
       }
     } else if (result.data && result.data.page_group_type === "games") {
+      setCategories(mainCategories.length > 0 ? mainCategories : []);
       configureImageSrc(result);
       pageCurrent = 1;
       setShowFullDivLoading(false);
@@ -145,6 +160,54 @@ const Home = () => {
   const handleLoginConfirm = () => {
     setShowLoginModal(false);
   };
+
+  const fetchContent = (category, categoryId, tableName, categoryIndex, resetCurrentPage, pageGroupCode) => {
+    let pageSize = 30;
+    setIsLoadingGames(true);
+
+    if (resetCurrentPage) {
+      pageCurrent = 0;
+      setGames([]);
+    }
+
+    const groupCode = categoryType === "categories" ? pageGroupCode || pageData.page_group_code : "default_pages_home"
+
+    let apiUrl =
+      "/get-content?page_group_type=categories&page_group_code=" +
+      groupCode +
+      "&table_name=" +
+      tableName +
+      "&apigames_category_id=" +
+      categoryId +
+      "&page=" +
+      pageCurrent +
+      "&length=" +
+      pageSize;
+
+    if (selectedProvider && selectedProvider.id) {
+      apiUrl += "&provider=" + selectedProvider.id;
+    }
+
+    callApi(contextData, "GET", apiUrl, callbackFetchContent, null);
+  };
+
+  const callbackFetchContent = (result) => {
+    if (result.status === 500 || result.status === 422) {
+      setShowFullDivLoading(false);
+    } else {
+      if (pageCurrent == 0) {
+        configureImageSrc(result);
+        setGames(result.content);
+      } else {
+        configureImageSrc(result);
+        setGames([...games, ...result.content]);
+      }
+      pageCurrent += 1;
+    }
+    setShowFullDivLoading(false);
+    setIsLoadingGames(false);
+  };
+
 
   const fetchContentForCategory = (category, categoryId, tableName, categoryIndex, resetCurrentPage, pageGroupCode = null) => {
     const pageSize = 12;
@@ -268,6 +331,29 @@ const Home = () => {
     try { getPage('casino'); } catch (e) { }
   };
 
+  const handleProviderSelect = (provider, index = 0) => {
+    setSelectedProvider(provider);
+
+    if (provider) {
+      fetchContent(
+        provider,
+        provider.id,
+        provider.table_name,
+        index,
+        true
+      );
+
+      if (isMobile) {
+        setMobileShowMore(true);
+      }
+    } else {
+      const firstCategory = categories[0];
+      if (firstCategory) {
+        fetchContent(firstCategory, firstCategory.id, firstCategory.table_name, 0, true);
+      }
+    }
+  };  
+
   return (
     <div className="main-page">
       {showLoginModal && (
@@ -381,6 +467,13 @@ const Home = () => {
               </div>
             </>
           }
+
+          <ProviderContainer
+            categories={categories}
+            selectedProvider={selectedProvider}
+            setSelectedProvider={setSelectedProvider}
+            onProviderSelect={handleProviderSelect}
+          />
           <Footer isSlotsOnly={isSlotsOnly} />
         </>
       )}

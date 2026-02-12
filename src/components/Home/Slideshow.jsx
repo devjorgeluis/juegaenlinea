@@ -1,7 +1,7 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { useOutletContext } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay, Pagination } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -13,7 +13,6 @@ import ImgBanner5 from "/src/assets/img/slider-4.png";
 
 const Slideshow = () => {
   const swiperRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = useState(1);
   const { isMobile } = useOutletContext();
 
   const slides = [
@@ -24,17 +23,6 @@ const Slideshow = () => {
     { id: 4, image: ImgBanner5 },
   ];
 
-  const handleSlideChange = (swiper) => {
-    const realIndex = swiper.realIndex + 1;
-    setCurrentSlide(realIndex);
-  };
-
-  useEffect(() => {
-    if (swiperRef.current) {
-      setCurrentSlide(swiperRef.current.swiper.realIndex + 1);
-    }
-  }, []);
-
   return (
     <div className="w-full relative">
       <div className="jel-banner-container">
@@ -42,12 +30,8 @@ const Slideshow = () => {
           <div className="swiper-container swiper-initialized swiper-horizontal swiper-backface-hidden">
             <Swiper
               ref={swiperRef}
-              modules={[Navigation, Autoplay, Pagination]}
+              modules={[Autoplay, Pagination]}
               slidesPerView={1}
-              navigation={{
-                nextEl: '.swiper-button-next',
-                prevEl: '.swiper-button-prev',
-              }}
               pagination={{
                 clickable: true,
                 el: '.swiper-pagination',
@@ -56,10 +40,6 @@ const Slideshow = () => {
               autoplay={{
                 delay: 3000,
                 disableOnInteraction: false,
-              }}
-              onSlideChange={(swiper) => handleSlideChange(swiper)}
-              onInit={(swiper) => {
-                setCurrentSlide(swiper.realIndex + 1);
               }}
               className="swiper-wrapper"
             >

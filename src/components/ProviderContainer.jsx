@@ -1,24 +1,92 @@
-// import IconFilter from "/src/assets/svg/filter.svg";
+import { useContext, useCallback, useRef } from "react";
+import { AppContext } from "../AppContext";
+
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const ProviderContainer = ({
-    onOpenProviders
+    categories,
+    onProviderSelect,
 }) => {
+    const { contextData } = useContext(AppContext);
+    const swiperRef = useRef(null);
+    const prevRef = useRef(null);
+    const nextRef = useRef(null);
+
+    const providers = categories.filter((cat) => cat.code && cat.code !== "home");
+
+    const handleClick = (e, provider) => {
+        e.preventDefault();
+        onProviderSelect(provider);
+    };
+
+    const handleNext = useCallback(() => {
+        if (!swiperRef.current) return;
+        swiperRef.current.swiper.slideNext();
+    }, []);
+
+    const handlePrev = useCallback(() => {
+        if (!swiperRef.current) return;
+        swiperRef.current.swiper.slidePrev();
+    }, []);    
 
     return (
-        <div className="sc-lgGbPx dMMndc cy-lobby-header">
-            <div className="sc-kIJQPJ fwLZFs">
-                <h1 className="sc-kLzfdg sc-sAqkl hbjpRY hXxZyG cy-lobby-header-title">
-                    <span>Ver todos</span>
-                    <div className="sc-igrwpl bBEpim cy-applied-advanced-filters-indicator">
-                        <span className="sc-IYxHW bRikFa"></span>
-                        <a
-                            className="sc-bKhVx kBwCyY cy-open-filters-button"
-                            onClick={(e) => { e.preventDefault(); if (onOpenProviders) onOpenProviders(); }} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if (onOpenProviders) onOpenProviders(); } }}
-                        >
-                            {/* <img src={IconFilter} className="sc-bqOBqt PBviZ cy-filter-icon" style={{ width: "1.6rem", height: "1.6rem" }} /> */}
-                        </a>
+        <div className="jel-games-providers-module">
+            <div className="container">
+                <div className="jel-games-providers-module-ex">
+                    <div className="jel-games-providers-module-title">
+                        <div className="jel-games-providers-module-title-icon"><i className="fa-solid fa-dice"></i></div>
+                        <div className="jel-games-providers-module-title-text">Proveedores</div>
                     </div>
-                </h1>
+
+                    <div className="jel-games-providers-module-body">
+                        <div className="jel-games-providers-module-body-ex">
+                            <Swiper
+                                ref={swiperRef}
+                                modules={[Navigation]}
+                                spaceBetween={0}
+                                slidesPerView="6"
+                                centeredSlides={false}
+                                grabCursor={true}
+                                loop={true}
+                                navigation={{
+                                    prevEl: prevRef.current,
+                                    nextEl: nextRef.current,
+                                }}
+                                breakpoints={{
+                                    320: { slidesPerView: 2 },
+                                    768: { slidesPerView: 4 },
+                                    1280: { slidesPerView: 6 },
+                                }}
+                                className="swiper-container swiper-initialized swiper-horizontal"
+                            >
+                                {
+                                    providers.map((provider, idx) => {
+                                        const imageUrl = provider.image_local
+                                            ? `${contextData.cdnUrl}${provider.image_local}`
+                                            : provider.image_url;
+
+                                        return (
+                                            <SwiperSlide key={idx} className="swiper-slide">
+                                                <div className="jel-games-provider-art" onClick={(e) => handleClick(e, provider)}>
+                                                    <a className="jel-games-provider-art-ex">
+                                                        <span className="jel-games-provider-art-figure" style={{backgroundImage: `url(${imageUrl})`}}></span>
+                                                        <span className="btn jel-games-provider-btn">Ver juegos</span>
+                                                    </a>
+                                                </div>
+                                            </SwiperSlide>
+                                        )
+                                    })
+                                }
+
+                                <div className="swiper-button-next" onClick={handleNext}><i className="fa-solid fa-angle-right"></i></div>
+                                <div className="swiper-button-prev" onClick={handlePrev}><i className="fa-solid fa-angle-left"></i></div>                                
+                            </Swiper>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -30045,7 +30045,8 @@ html.chat-opened body .custom-chat .custom-chat-expand {
 }
 
 .jel-games-providers-module .jel-games-providers-module-ex .jel-games-providers-module-body .jel-games-providers-module-body-ex .swiper-container {
-    position: relative
+    position: relative;
+    overflow: unset;
 }
 
 .jel-games-providers-module .jel-games-providers-module-ex .jel-games-providers-module-body .jel-games-providers-module-body-ex .swiper-container .swiper-button-next,
