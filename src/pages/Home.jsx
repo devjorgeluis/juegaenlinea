@@ -2,6 +2,7 @@ import { useContext, useState, useEffect, useRef } from "react";
 import { useOutletContext, useLocation } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
+import { LayoutContext } from "../components/Layout/LayoutContext";
 import { callApi } from "../utils/Utils";
 import Footer from "../components/Layout/Footer";
 import Slideshow from "../components/Home/Slideshow";
@@ -20,6 +21,7 @@ let pageCurrent = 0;
 const Home = () => {
   const { contextData } = useContext(AppContext);
   const { setShowFullDivLoading } = useContext(NavigationContext);
+  const { txtSearch, setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [topGames, setTopGames] = useState([]);
   const [topArcade, setTopArcade] = useState([]);
@@ -198,9 +200,15 @@ const Home = () => {
       if (pageCurrent == 0) {
         configureImageSrc(result);
         setGames(result.content);
+        if (selectedProvider) {
+          setSearchGames(result.content);
+        }
       } else {
         configureImageSrc(result);
         setGames([...games, ...result.content]);
+        if (selectedProvider) {
+          setSearchGames([...searchGames, ...result.content]);
+        }
       }
       pageCurrent += 1;
     }
@@ -335,6 +343,10 @@ const Home = () => {
     setSelectedProvider(provider);
 
     if (provider) {
+      document.body.classList.add('hc-opened-search');
+      setTxtSearch(provider.name || '');
+      setIsProviderSelected(true);
+      
       fetchContent(
         provider,
         provider.id,
@@ -347,6 +359,12 @@ const Home = () => {
         setMobileShowMore(true);
       }
     } else {
+      setTxtSearch('');
+      document.body.classList.remove('hc-opened-search');
+      setSearchGames([]);
+      
+      setIsProviderSelected(false);
+      
       const firstCategory = categories[0];
       if (firstCategory) {
         fetchContent(firstCategory, firstCategory.id, firstCategory.table_name, 0, true);

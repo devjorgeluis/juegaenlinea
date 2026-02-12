@@ -14,40 +14,42 @@ const SearchInput = ({
     setGames,
     setIsLoadingGames,
     searchDelayTimer,
-    setSearchDelayTimer
+    setSearchDelayTimer,
+    isProviderSelected = false
 }) => {
     const { contextData } = useContext(AppContext);
     const { setShowMobileSearch } = useContext(LayoutContext);
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const searchContainerRef = useRef(null);
-
+    
     useEffect(() => {
         const hasResultsOrLoading =
             (games?.length > 0 || isLoadingGames) ||
             (txtSearch.trim() !== "" && !isLoadingGames);
         setIsDropdownVisible(txtSearch.trim() !== "" && hasResultsOrLoading);
     }, [txtSearch, games, isLoadingGames]);
-
+    
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
                 setIsDropdownVisible(false);
             }
         };
-
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
-
+    
     const handleChange = (event) => {
+        if (isProviderSelected) return;
+        
         const value = event.target.value;
         setTxtSearch(value);
         search({ target: { value }, key: event.key, keyCode: event.keyCode });
     };
-
+    
     const handleFocus = () => {
         if (isMobile) {
             setShowMobileSearch(true);
@@ -56,11 +58,11 @@ const SearchInput = ({
             setIsDropdownVisible(true);
         }
     };
-
+    
     const handleLoginConfirm = () => {
         setShowLoginModal(false);
     };
-
+    
     const handleCloseSearch = () => {
         setTxtSearch("");
         setGames([]);
@@ -77,7 +79,7 @@ const SearchInput = ({
             searchRef.current.blur();
         }
     };
-
+    
     return (
         <>
             {showLoginModal && (
@@ -100,6 +102,8 @@ const SearchInput = ({
                     onChange={handleChange}
                     onKeyUp={search}
                     onFocus={handleFocus}
+                    disabled={isProviderSelected}
+                    style={isProviderSelected ? { cursor: 'not-allowed', opacity: 0.7 } : {}}
                 />
                 <button 
                     className="btn hc-close-search"

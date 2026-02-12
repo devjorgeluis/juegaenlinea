@@ -23929,18 +23929,29 @@ header .header-wrapper .container-h .header-right {
     position: unset
 }
 
+@media screen and (max-width: 1199px) {
+    header .header-wrapper .container-h .header-right {
+        align-items: center;
+        display: flex;
+        width: 100%;
+    }
+
+    header .header-wrapper .container-h .header-right>.btn-search-main:first-child, header .header-wrapper .container-h .header-right>.dropdown-h-chat.hm-show:first-child {
+        margin-left: 10px;
+    }
+
+    header .header-wrapper .container-h .header-right .header-mobile-right {
+        margin-left: auto;
+    }
+
+    header .header-wrapper .container-h .header-right .btn-search-main {
+        margin-right: auto !important;
+    }
+}
+
 header .header-wrapper .container-h .header-right .header-mobile-right {
     display: inline-block;
     vertical-align: middle
-}
-
-@media screen and (max-width:991px) {
-    header .header-wrapper .container-h .header-right .header-mobile-right {
-        left: 60px;
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%)
-    }
 }
 
 header .header-wrapper .container-h .header-right .auth {

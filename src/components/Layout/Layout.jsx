@@ -28,7 +28,6 @@ const Layout = () => {
     const [showSupportModal, setShowSupportModal] = useState(false);
     const [supportParentOnly, setSupportParentOnly] = useState(false);
     const [showMyProfileModal, setShowMyProfileModal] = useState(false);
-    const [showHistoryModal, setShowHistoryModal] = useState(false);
     const [topGames, setTopGames] = useState([]);
     const [topArcade, setTopArcade] = useState([]);
     const [topCasino, setTopCasino] = useState([]);
@@ -40,8 +39,11 @@ const Layout = () => {
     const [isSmallScreen, setIsSmallScreen] = useState(false);
     const [showMobileSearch, setShowMobileSearch] = useState(false);
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-    const [isHistoryExpanded, setIsHistoryExpanded] = useState(false);
     const closeTimeoutRef = useRef(null);
+
+    const [txtSearch, setTxtSearch] = useState("");
+    const [searchGames, setSearchGames] = useState([]);
+    const [isProviderSelected, setIsProviderSelected] = useState(false); // Add this state
 
     const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
     const [gameModalData, setGameModalData] = useState({
@@ -124,20 +126,6 @@ const Layout = () => {
         };
     }, [isUserMenuOpen]);
 
-    useEffect(() => {
-        const mobileClasses = ["cgp-mobile", "cgp-portrait", "cgp-low-height", "cgp-real-mobile", "cgp-iphone-ver-6", "cgp-ios", "cgp-gib", "promotions-lobby"];
-        const desktopClasses = ["cgp-pc", "cgp-landscape", "cgp-low-height", "cgp-not-mobile-os", "cgp-windows", "cgp-gib", "promotions-lobby"];
-
-        const htmlElement = document.documentElement;
-        htmlElement.classList.remove(...mobileClasses, ...desktopClasses);
-
-        if (isMobile) {
-            htmlElement.classList.add(...mobileClasses);
-        } else {
-            htmlElement.classList.add(...desktopClasses);
-        }
-    }, [isMobile]);
-
     const refreshBalance = () => {
         setUserBalance("");
         callApi(contextData, "GET", "/get-user-balance", callbackRefreshBalance, null);
@@ -214,14 +202,6 @@ const Layout = () => {
         setSupportParentOnly(false);
     };
 
-    const handleMyProfileClick = () => {
-        setShowMyProfileModal(true);
-    };
-
-    const handleHistoryClick = () => {
-        setShowHistoryModal(true);
-    };
-
     const launchGameFromSearch = (game, type, launcher) => {
         setShowMobileSearch(false);
         setShouldShowGameModal(true);
@@ -269,137 +249,6 @@ const Layout = () => {
         launchGameFromSearch(gameToUse, type || gameModalData.gameType, launcher || gameModalData.gameLauncher);
     };
 
-    const closeUserMenu = () => {
-        setIsUserMenuOpen(false);
-        if (closeTimeoutRef.current) {
-            clearTimeout(closeTimeoutRef.current);
-        }
-    };
-
-    const toggleHistoryMenu = () => {
-        setIsHistoryExpanded(!isHistoryExpanded);
-    };
-
-    const formatBalance = (value) => {
-        const num = parseFloat(value);
-        if (isNaN(num)) return "0.00";
-        return num.toLocaleString("de-DE", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-        });
-    };
-
-    // const UserMenuContent = () => (
-    //     <div className="sc-fbrkoh hmuUFI">
-    //         <div className="sc-biTJds juaoAi">
-    //             <div className="sc-cXWvkA sc-gYmQl dOIkyn hXdhYp cy-user-menu-header-box">
-    //                 <div className="sc-hVVKKh fFlnSE cy-welcome-user-menu-title">
-    //                     <p className="sc-kvGAGD hvVMZr">Mi Cuenta</p>
-    //                 </div>
-    //                 <div className="sc-hIFQNf cgiDgU">
-    //                     <div className="sc-gzIglc kcwQjd cy-user-menu-close-btn" onClick={closeUserMenu} style={{ cursor: 'pointer' }}>
-    //                         <img src={IconClose} className="sc-bqOBqt PBviZ" style={{ width: "1.4rem", height: "1.4rem", margin: "auto" }} />
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //             <div className="sc-lfyySb gQxOdg">
-    //                 <div direction="column" className="sc-dIEovb fJgfbR">
-    //                     <div className="sc-fEyyHY inSENM">
-    //                         <div className="sc-kXzPdr oVDqI cy-user-menu-user-details">
-    //                             <div className="sc-dIEovb irhjgz">
-    //                                 <div className="sc-bjEuFB bvvZly"></div>
-    //                                 <div className="sc-fEyyHY inSENM">
-    //                                     <div className="sc-hTJBOf gklrIC"><span className="cy-user-name">{contextData?.session?.user?.username || '-'}</span></div>
-    //                                     <div className="sc-fJoDJo eeRhen">
-    //                                         <span className="sc-kKHKiu dlzQYQ">N.º de asistencia</span>
-    //                                         <span className="user-cid cy-user-cid">{contextData?.session?.user?.phone || '-'}</span>
-    //                                     </div>
-    //                                 </div>
-    //                                 <div className="sc-fnOeCC fDelro">
-    //                                     <img
-    //                                         src={IconArrowRight}
-    //                                         className="sc-bqOBqt PBviZ"
-    //                                         style={{ width: "1.2rem", height: "1.2rem" }}
-    //                                     />
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                         <div className="sc-kXzPdr oVDqI cy-balance-box">
-    //                             <div className="sc-dIEovb cwoLEt">
-    //                                 <div className="sc-exOYqz lcbWRF">Saldo actual</div>
-    //                                 <span className="sc-bsFqxl dOKwdH cy-balance-box-amount">${formatBalance(contextData?.session?.user?.balance)}</span>
-    //                             </div>
-    //                         </div>
-    //                         <div className="sc-kXzPdr oVDqI cy-useful-links-section">
-    //                             <ul className="sc-jPFrcG czuYV cy-useful-links-list">
-    //                                 <li className="cy-useful-links-li-item">
-    //                                     <div
-    //                                         className={`sc-fXCGkZ  ${!isHistoryExpanded ? 'fNITAL' : 'bJFzKi'} historyMenuItem cy-useful-links-item-expandable cy-useful-links-item`}
-    //                                         onClick={toggleHistoryMenu}
-    //                                         style={{ cursor: 'pointer' }}
-    //                                     >
-    //                                         <div className="sc-dgWXKx sc-bsStmr dvyXko kHIHiW">
-    //                                             <img src={IconHistory} className="sc-bqOBqt PBviZ" />
-    //                                         </div>
-    //                                         <div className="sc-fEyyHY inSENM">Historial</div>
-    //                                         <div className="sc-fnOeCC fDelro">
-    //                                             <img
-    //                                                 src={IconArrowRight}
-    //                                                 className="sc-bqOBqt PBviZ"
-    //                                                 style={{ width: "1.2rem", height: "1.2rem", transition: "transform 0.12s ease-out", transform: isHistoryExpanded ? "rotate(-90deg)" : "rotate(90deg)" }}
-    //                                             />
-    //                                         </div>
-    //                                     </div>
-    //                                     <ul
-    //                                         className="sc-jPFrcG czuYV cy-useful-links-sub-items-list"
-    //                                         style={{ display: isHistoryExpanded ? 'block' : 'none' }}
-    //                                     >
-    //                                         <li className="cy-useful-links-li-item" onClick={() => { navigate("/profile/history"); closeUserMenu(); }}>
-    //                                             <div className="sc-fXCGkZ fNITAL cy-useful-links-subitem gamingHistoryMenuItem cy-useful-links-item">
-    //                                                 <div className="sc-dgWXKx sc-bsStmr dvyXko kHIHiW">
-    //                                                     <img src={IconPoker} className="sc-bqOBqt PBviZ" />
-    //                                                 </div>
-    //                                                 <div className="sc-fEyyHY inSENM">Historial de juego</div>
-    //                                                 <div className="sc-fnOeCC fDelro">
-    //                                                     <img
-    //                                                         src={IconArrowRight}
-    //                                                         className="sc-bqOBqt PBviZ"
-    //                                                         style={{ width: "1.2rem", height: "1.2rem", transition: "transform 0.12s ease-out" }}
-    //                                                     />
-    //                                                 </div>
-    //                                             </div>
-    //                                         </li>
-    //                                         <li className="cy-useful-links-li-item" onClick={() => { navigate("/profile/transaction"); closeUserMenu(); }}>
-    //                                             <div className="sc-fXCGkZ fNITAL cy-useful-links-subitem transactionHistoryMenuItem cy-useful-links-item">
-    //                                                 <div className="sc-dgWXKx sc-bsStmr dvyXko kHIHiW">
-    //                                                     <img src={IconArrowUpdown} className="sc-bqOBqt PBviZ" />
-    //                                                 </div>
-    //                                                 <div className="sc-fEyyHY inSENM">Historial de transacciones</div>
-    //                                                 <div className="sc-fnOeCC fDelro">
-    //                                                     <img
-    //                                                         src={IconArrowRight}
-    //                                                         className="sc-bqOBqt PBviZ"
-    //                                                         style={{ width: "1.2rem", height: "1.2rem", transition: "transform 0.12s ease-out" }}
-    //                                                     />
-    //                                                 </div>
-    //                                             </div>
-    //                                         </li>
-    //                                     </ul>
-    //                                 </li>
-    //                             </ul>
-    //                         </div>
-    //                     </div>
-    //                     <div className="sc-fnOeCC fDelro">
-    //                         <div className="sc-kXzPdr oVDqI cy-useful-links-section">
-    //                             <a className="sc-iCtmhp pLuTW cy-logout-link cy-useful-links-item cy-useful-links-li-item">Cerrar sesión</a>
-    //                         </div>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     </div>
-    // );
-
     const layoutContextValue = {
         isLogin,
         userBalance,
@@ -415,7 +264,13 @@ const Layout = () => {
         setShowMobileSearch,
         openSupportModal,
         launchGameFromSearch,
-        setIsUserMenuOpen
+        setIsUserMenuOpen,
+        txtSearch,
+        setTxtSearch,
+        searchGames,
+        setSearchGames,
+        isProviderSelected,
+        setIsProviderSelected
     };
 
     return (
@@ -461,6 +316,11 @@ const Layout = () => {
                             handleLoginClick={handleLoginClick}
                             handleLogoutClick={handleLogoutClick}
                             openSupportModal={openSupportModal}
+                            txtSearch={txtSearch}
+                            setTxtSearch={setTxtSearch}
+                            games={searchGames}
+                            setGames={setSearchGames}
+                            isProviderSelected={isProviderSelected}
                         />
 
                         <Sidebar

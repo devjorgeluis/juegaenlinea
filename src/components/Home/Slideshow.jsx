@@ -9,13 +9,26 @@ import ImgBanner1 from "/src/assets/img/slider-1.png";
 import ImgBanner2 from "/src/assets/img/slider-2.png";
 import ImgBanner3 from "/src/assets/img/slider-3.png";
 import ImgBanner4 from "/src/assets/img/slider-4.png";
-import ImgBanner5 from "/src/assets/img/slider-4.png";
+import ImgBanner5 from "/src/assets/img/slider-5.png";
+import ImgMobileBanner1 from "/src/assets/img/mobile-slider-1.png";
+import ImgMobileBanner2 from "/src/assets/img/mobile-slider-2.png";
+import ImgMobileBanner3 from "/src/assets/img/mobile-slider-3.png";
+import ImgMobileBanner4 from "/src/assets/img/mobile-slider-4.png";
+import ImgMobileBanner5 from "/src/assets/img/mobile-slider-5.png";
+import ImgMobileBanner6 from "/src/assets/img/mobile-slider-6.png";
 
 const Slideshow = () => {
   const swiperRef = useRef(null);
   const { isMobile } = useOutletContext();
 
-  const slides = [
+  const slides = isMobile ? [
+    { id: 0, image: ImgMobileBanner1 },
+    { id: 1, image: ImgMobileBanner2 },
+    { id: 2, image: ImgMobileBanner3 },
+    { id: 3, image: ImgMobileBanner4 },
+    { id: 4, image: ImgMobileBanner5 },
+    { id: 5, image: ImgMobileBanner6 },
+  ] : [
     { id: 0, image: ImgBanner1 },
     { id: 1, image: ImgBanner2 },
     { id: 2, image: ImgBanner3 },

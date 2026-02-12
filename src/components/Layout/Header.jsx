@@ -20,12 +20,15 @@ const Header = ({
     handleLoginClick,
     handleLogoutClick,
     openSupportModal,
+    txtSearch,
+    setTxtSearch,
+    games,
+    setGames,
+    isProviderSelected = false,
 }) => {
     const { contextData } = useContext(AppContext);
     const [showDropdown, setShowDropdown] = useState(false);
     const { setIsUserMenuOpen, launchGameFromSearch } = useContext(LayoutContext);
-    const [games, setGames] = useState([]);
-    const [txtSearch, setTxtSearch] = useState("");
     const [isLoadingGames, setIsLoadingGames] = useState(false);
     const navigate = useNavigate();
     const searchRef = useRef(null);
@@ -55,6 +58,8 @@ const Header = ({
     };
 
     const search = (e) => {
+        if (isProviderSelected) return;
+        
         let keyword = e.target.value;
         setTxtSearch(keyword);
 
@@ -142,16 +147,19 @@ const Header = ({
                             </a>
                         </div>
                         <div className="header-right">
-                            <div className="dropdown d-inline-block d-xl-none dropdown-h-chat hm-show">
-                                <button
-                                    className="btn btn-transparent"
-                                    type="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <i className="fa-solid fa-headset"></i>
-                                </button>
-                            </div>
+                            {
+                                !isLogin && 
+                                <div className="dropdown d-inline-block d-xl-none dropdown-h-chat hm-show">
+                                    <button
+                                        className="btn btn-transparent"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                    >
+                                        <i className="fa-solid fa-headset"></i>
+                                    </button>
+                                </div>
+                            }
                             <button
                                 className="btn btn-transparent btn-h-custom btn-h-custom-mini me-1 btn-search-main"
                                 onClick={handleSearchClick}
@@ -284,6 +292,7 @@ const Header = ({
                                     setIsLoadingGames={setIsLoadingGames}
                                     searchDelayTimer={searchDelayTimer}
                                     setSearchDelayTimer={setSearchDelayTimer}
+                                    isProviderSelected={isProviderSelected}
                                 />
                             </div>
                         </div>
