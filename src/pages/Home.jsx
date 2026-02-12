@@ -196,26 +196,22 @@ const Home = () => {
   const callbackFetchContent = (result) => {
     if (result.status === 500 || result.status === 422) {
       setShowFullDivLoading(false);
+      setIsLoadingGames(false);
     } else {
+      configureImageSrc(result);
+      
       if (pageCurrent == 0) {
-        configureImageSrc(result);
         setGames(result.content);
-        if (selectedProvider) {
-          setSearchGames(result.content);
-        }
+        setSearchGames(result.content);
       } else {
-        configureImageSrc(result);
         setGames([...games, ...result.content]);
-        if (selectedProvider) {
-          setSearchGames([...searchGames, ...result.content]);
-        }
+        setSearchGames([...searchGames, ...result.content]);
       }
       pageCurrent += 1;
     }
     setShowFullDivLoading(false);
     setIsLoadingGames(false);
   };
-
 
   const fetchContentForCategory = (category, categoryId, tableName, categoryIndex, resetCurrentPage, pageGroupCode = null) => {
     const pageSize = 12;
@@ -346,6 +342,8 @@ const Home = () => {
       document.body.classList.add('hc-opened-search');
       setTxtSearch(provider.name || '');
       setIsProviderSelected(true);
+
+      setSearchGames([]);
       
       fetchContent(
         provider,

@@ -71,7 +71,7 @@ const ProviderContainer = ({
                                         return (
                                             <SwiperSlide key={idx} className="swiper-slide">
                                                 <div className="jel-games-provider-art" onClick={(e) => handleClick(e, provider)}>
-                                                    <a className="jel-games-provider-art-ex">
+                                                    <a className="jel-games-provider-art-ex cursor-pointer">
                                                         <span className="jel-games-provider-art-figure" style={{backgroundImage: `url(${imageUrl})`}}></span>
                                                         <span className="btn jel-games-provider-btn">Ver juegos</span>
                                                     </a>
