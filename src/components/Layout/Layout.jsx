@@ -447,20 +447,6 @@ const Layout = () => {
                 <div id="orbit-container">
                     <div className={`sc-kYrjYd ${isUserMenuOpen ? 'WziHW' : 'hbEPYD'} cy-overlay`}></div>
 
-                    {!isMobile && !shouldShowGameModal &&
-                        <Sidebar
-                            isSlotsOnly={isSlotsOnly}
-                            isMobile={isMobile}
-                            isLogin={isLogin}
-                            supportParent={supportParent}
-                            openSupportModal={openSupportModal}
-                            handleLoginClick={handleLoginClick}
-                            handleLogoutClick={handleLogoutClick}
-                            isUserMenuOpen={isUserMenuOpen}
-                            setIsUserMenuOpen={setIsUserMenuOpen}
-                        />
-                    }
-
                     <div className="sc-cAgqEL friIZi cy-main-wrapper">
                         {/* {isUserMenuOpen && (
                             <div className="sc-eZUyqC cZWmCN cy-user-menu user-menu-open">
@@ -475,6 +461,18 @@ const Layout = () => {
                             handleLoginClick={handleLoginClick}
                             handleLogoutClick={handleLogoutClick}
                             openSupportModal={openSupportModal}
+                        />
+
+                        <Sidebar
+                            isSlotsOnly={isSlotsOnly}
+                            isMobile={isMobile}
+                            isLogin={isLogin}
+                            supportParent={supportParent}
+                            openSupportModal={openSupportModal}
+                            handleLoginClick={handleLoginClick}
+                            handleLogoutClick={handleLogoutClick}
+                            isUserMenuOpen={isUserMenuOpen}
+                            setIsUserMenuOpen={setIsUserMenuOpen}
                         />
                         <Outlet context={{ isSlotsOnly, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
                     </div>

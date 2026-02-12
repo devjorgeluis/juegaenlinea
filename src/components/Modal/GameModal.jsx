@@ -15,13 +15,19 @@ const GameModal = ({
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
-      const hours = now.getHours().toString().padStart(2, '0');
+      let hours = now.getHours();
       const minutes = now.getMinutes().toString().padStart(2, '0');
-      setCurrentTime(`${hours}:${minutes}`);
+      const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      const formattedHours = hours.toString().padStart(2, '0');
+
+      setCurrentTime(`${formattedHours}:${minutes} ${ampm}`);
     };
 
     updateTime();
-    
+
     const intervalId = setInterval(updateTime, 1000);
     return () => clearInterval(intervalId);
   }, []);
@@ -81,12 +87,12 @@ const GameModal = ({
                 <span className="sc-IYxHW gxNfBt"></span>
               </div>
               <div className="sc-dSeeha sc-CHUkg kWgyCH gTNptV">
-                <button 
+                <button
                   className="sc-iVITdd fQGMWi cy-game-navbar-fullscreen-button"
                   onClick={toggleFullscreen}
                 ></button>
                 <span className="sc-hSNZQq hFOJgn"></span>
-                <button 
+                <button
                   className="sc-bcPLoT sc-djVRRB kSDmiN cedNG cy-game-navbar-close-button"
                   onClick={onClose}
                 ></button>
@@ -97,9 +103,9 @@ const GameModal = ({
         <div className="sc-dzZkzZ gLgOii" style={{ backgroundImage: `url(${gameImg})` }}>
           {!iframeLoaded && <LoadCasino />}
           {gameUrl && (
-            <iframe 
+            <iframe
               src={gameUrl}
-              allow="autoplay" 
+              allow="autoplay"
               className="sc-cQvPqr cqOVkk cy-game-iframe"
               onLoad={handleIframeLoad}
               style={{ display: iframeLoaded ? 'block' : 'none' }}
