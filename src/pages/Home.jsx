@@ -425,64 +425,62 @@ const Home = () => {
           {!selectedProvider &&
             <>
               <Slideshow />
-              <div className="sc-gKIhPs la-dtQg cy-layout-wrapper-homepage">
-                {topGames.length > 0 && (
-                  <HotGameSlideshow
-                    games={topGames}
-                    name="games"
-                    title="Juegos Populares"
-                    onGameClick={(game) => {
-                      if (isLogin) {
-                        launchGame(game, "slot", "modal");
-                      } else {
-                        handleLoginClick();
-                      }
-                    }}
-                  />
-                )}
-                {topCasino.length > 0 && isSlotsOnly === "false" && (
-                  <HotGameSlideshow
-                    games={topCasino}
-                    name="casino"
-                    title="Casino"
-                    onGameClick={(game) => {
-                      if (isLogin) {
-                        launchGame(game, "slot", "modal");
-                      } else {
-                        handleLoginClick();
-                      }
-                    }}
-                  />
-                )}
-                {topLiveCasino.length > 0 && isSlotsOnly === "false" && (
-                  <HotGameSlideshow
-                    games={topLiveCasino}
-                    name="liveCasino"
-                    title="Casino en Vivo"
-                    onGameClick={(game) => {
-                      if (isLogin) {
-                        launchGame(game, "slot", "modal");
-                      } else {
-                        handleLoginClick();
-                      }
-                    }}
-                  />
-                )}
-                {topArcade.length > 0 && isSlotsOnly === "false" && (
-                  <HotGameSlideshow
-                    games={topArcade}
-                    name="arcade"
-                    title="Crash Games"
-                    onGameClick={(game) => {
-                      if (isLogin) {
-                        launchGame(game, "slot", "modal");
-                      } else {
-                        handleLoginClick();
-                      }
-                    }}
-                  />
-                )}
-              </div>
+              {topGames.length > 0 && (
+                <HotGameSlideshow
+                  games={topGames}
+                  name="games"
+                  title="Juegos Populares"
+                  onGameClick={(game) => {
+                    if (isLogin) {
+                      launchGame(game, "slot", "modal");
+                    } else {
+                      handleLoginClick();
+                    }
+                  }}
+                />
+              )}
+              {topCasino.length > 0 && isSlotsOnly === "false" && (
+                <HotGameSlideshow
+                  games={topCasino}
+                  name="casino"
+                  title="Casino"
+                  onGameClick={(game) => {
+                    if (isLogin) {
+                      launchGame(game, "slot", "modal");
+                    } else {
+                      handleLoginClick();
+                    }
+                  }}
+                />
+              )}
+              {topLiveCasino.length > 0 && isSlotsOnly === "false" && (
+                <HotGameSlideshow
+                  games={topLiveCasino}
+                  name="liveCasino"
+                  title="Casino en Vivo"
+                  onGameClick={(game) => {
+                    if (isLogin) {
+                      launchGame(game, "slot", "modal");
+                    } else {
+                      handleLoginClick();
+                    }
+                  }}
+                />
+              )}
+              {topArcade.length > 0 && isSlotsOnly === "false" && (
+                <HotGameSlideshow
+                  games={topArcade}
+                  name="arcade"
+                  title="Crash Games"
+                  onGameClick={(game) => {
+                    if (isLogin) {
+                      launchGame(game, "slot", "modal");
+                    } else {
+                      handleLoginClick();
+                    }
+                  }}
+                />
+              )}
             </>
           }
 

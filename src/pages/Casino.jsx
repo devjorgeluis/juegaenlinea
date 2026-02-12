@@ -7,7 +7,7 @@ import { callApi } from "../utils/Utils";
 import Footer from "../components/Layout/Footer";
 import GameCard from "/src/components/GameCard";
 import CategoryContainer from "../components/CategoryContainer";
-// import Slideshow from "../components/Casino/Slideshow";
+import Slideshow from "../components/Casino/Slideshow";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameModal from "../components/Modal/GameModal";
 import LoadApi from "../components/Loading/LoadApi";
@@ -401,88 +401,86 @@ const Casino = () => {
         />
       ) : (
         <>
-          <div className="casino">
-            {/* <Slideshow /> */}
-            
-            {
-              isMobile &&
-              <div className="px-3">
-                <CategoryContainer
-                  categories={tags}
-                  selectedCategoryIndex={selectedCategoryIndex}
-                  onCategoryClick={(tag, _id, _table, index) => {
-                    if (window.location.hash !== `#${tag.code}`) {
-                      window.location.hash = `#${tag.code}`;
-                    } else {
-                      setSelectedCategoryIndex(index);
-                      getPage(tag.code);
-                    }
-                  }}
-                  onCategorySelect={handleCategorySelect}
-                  isMobile={isMobile}
-                  pageType="casino"
-                />
-              </div>
-            }
-            <div className="sc-fLAQkk cujxUP cy-lobby-wrapper-arena">
-              {
-                <>
-                  {isSingleCategoryView ? (
-                    <div className="game-list sc-iPQBAy gIqiQB cy-games-grid grid-games-list">
-                      {games.map((game) => (
-                        <GameCard
-                          key={game.id}
-                          id={game.id}
-                          title={game.name}
-                          text={isLogin ? "Jugar" : "Ingresar"}
-                          imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
-                          onGameClick={() => (isLogin ? launchGame(game, "slot", "modal") : handleLoginClick())}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    firstFiveCategoriesGames && firstFiveCategoriesGames.map((entry, catIndex) => {
-                      if (!entry || !entry.games) return null;
-                      const categoryKey = entry.category?.id || `cat-${catIndex}`;
-
-                      if (entry.games.length === 0) return null;
-
-                      return (
-                        <div key={categoryKey} className="casino-games-container">
-                          <div className="casino-games-container__list">
-                            <HotGameSlideshow
-                              games={entry.games.slice(0, 30)}
-                              name={entry.category.name}
-                              title={entry.category.name}
-                              onGameClick={(game) => {
-                                if (isLogin) {
-                                  launchGame(game, "slot", "modal");
-                                } else {
-                                  handleLoginClick();
-                                }
-                              }}
-                            />
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </>
-              }
-              <div className="mt-5">
-                {isLoadingGames && <LoadApi width={60} />}
-                {(isSingleCategoryView || selectedProvider) && !isLoadingGames && (
-                  <div className="text-center">
-                    <a className="btn btn-success load-more" onClick={loadMoreGames}>
-                      Mostrar todo
-                    </a>
-                  </div>
-                )}
-              </div>
+          <Slideshow />
+          
+          {
+            isMobile &&
+            <div className="px-3">
+              <CategoryContainer
+                categories={tags}
+                selectedCategoryIndex={selectedCategoryIndex}
+                onCategoryClick={(tag, _id, _table, index) => {
+                  if (window.location.hash !== `#${tag.code}`) {
+                    window.location.hash = `#${tag.code}`;
+                  } else {
+                    setSelectedCategoryIndex(index);
+                    getPage(tag.code);
+                  }
+                }}
+                onCategorySelect={handleCategorySelect}
+                isMobile={isMobile}
+                pageType="casino"
+              />
             </div>
+          }
+          <div className="sc-fLAQkk cujxUP cy-lobby-wrapper-arena">
+            {
+              <>
+                {isSingleCategoryView ? (
+                  <div className="game-list sc-iPQBAy gIqiQB cy-games-grid grid-games-list">
+                    {games.map((game) => (
+                      <GameCard
+                        key={game.id}
+                        id={game.id}
+                        title={game.name}
+                        text={isLogin ? "Jugar" : "Ingresar"}
+                        imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
+                        onGameClick={() => (isLogin ? launchGame(game, "slot", "modal") : handleLoginClick())}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  firstFiveCategoriesGames && firstFiveCategoriesGames.map((entry, catIndex) => {
+                    if (!entry || !entry.games) return null;
+                    const categoryKey = entry.category?.id || `cat-${catIndex}`;
 
-            <Footer />
+                    if (entry.games.length === 0) return null;
+
+                    return (
+                      <div key={categoryKey} className="casino-games-container">
+                        <div className="casino-games-container__list">
+                          <HotGameSlideshow
+                            games={entry.games.slice(0, 30)}
+                            name={entry.category.name}
+                            title={entry.category.name}
+                            onGameClick={(game) => {
+                              if (isLogin) {
+                                launchGame(game, "slot", "modal");
+                              } else {
+                                handleLoginClick();
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </>
+            }
+            <div className="mt-5">
+              {isLoadingGames && <LoadApi width={60} />}
+              {(isSingleCategoryView || selectedProvider) && !isLoadingGames && (
+                <div className="text-center">
+                  <a className="btn btn-success load-more" onClick={loadMoreGames}>
+                    Mostrar todo
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
+
+          <Footer />
         </>
       )}
     </>

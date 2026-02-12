@@ -1,21 +1,24 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef } from 'react';
 import { useOutletContext } from "react-router-dom";
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Autoplay, Pagination } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import ImgBanner1 from "/src/assets/img/casino-banner1.jpg";
-import ImgBanner2 from "/src/assets/img/casino-banner2.jpg";
-import ImgBanner3 from "/src/assets/img/casino-banner3.jpg";
-import ImgBanner4 from "/src/assets/img/casino-banner4.jpg";
-import ImgBanner5 from "/src/assets/img/casino-banner5.jpg";
-import ImgBanner6 from "/src/assets/img/casino-banner6.jpg";
-import ImgBanner7 from "/src/assets/img/casino-banner7.jpg";
+import ImgBanner1 from "/src/assets/img/casino-slider-1.png";
+import ImgBanner2 from "/src/assets/img/casino-slider-2.png";
+import ImgBanner3 from "/src/assets/img/casino-slider-3.png";
+import ImgBanner4 from "/src/assets/img/casino-slider-4.png";
+import ImgBanner5 from "/src/assets/img/casino-slider-5.png";
+import ImgBanner6 from "/src/assets/img/casino-slider-6.png";
+import ImgBanner7 from "/src/assets/img/casino-slider-7.png";
+import ImgBanner8 from "/src/assets/img/casino-slider-8.png";
+import ImgBanner9 from "/src/assets/img/casino-slider-9.png";
+import ImgBanner10 from "/src/assets/img/casino-slider-10.png";
+import ImgRightBanner from "/src/assets/svg/banner.svg";
 
 const CasinoSlideshow = () => {
   const swiperRef = useRef(null);
-  const [currentSlide, setCurrentSlide] = useState(1);
   const { isMobile } = useOutletContext();
 
   const slides = [
@@ -26,99 +29,58 @@ const CasinoSlideshow = () => {
     { id: 4, image: ImgBanner5 },
     { id: 5, image: ImgBanner6 },
     { id: 6, image: ImgBanner7 },
+    { id: 7, image: ImgBanner8 },
+    { id: 8, image: ImgBanner9 },
+    { id: 9, image: ImgBanner10 },
   ];
 
-  const handleSlideChange = (swiper) => {
-    const realIndex = swiper.realIndex + 1;
-    setCurrentSlide(realIndex);
-  };
-
-  const handlePrevClick = () => {
-    if (swiperRef.current && swiperRef.current.swiper) {
-      swiperRef.current.swiper.slidePrev();
-    }
-  };
-
-  const handleNextClick = () => {
-    if (swiperRef.current && swiperRef.current.swiper) {
-      swiperRef.current.swiper.slideNext();
-    }
-  };
-
-  useEffect(() => {
-    if (swiperRef.current) {
-      setCurrentSlide(swiperRef.current.swiper.realIndex + 1);
-    }
-  }, []);
-
   return (
-    <div className="w-full relative">
-      <div id="slider">
-        <div id="image-slider">
-          <Swiper
-            ref={swiperRef}
-            modules={[Navigation, Autoplay, Pagination]}
-            slidesPerView={1}
-            navigation={{
-              nextEl: '.swiper-button-next',
-              prevEl: '.swiper-button-prev',
-              disabledClass: 'swiper-button-disabled',
-            }}
-            pagination={{
-              clickable: true,
-              el: '.swiper-pagination',
-              type: 'bullets',
-              // dynamicBullets: true,
-            }}
-            loop={true}
-            autoplay={{
-              delay: 300000,
-              disableOnInteraction: false,
-            }}
-            onSlideChange={(swiper) => handleSlideChange(swiper)}
-            onInit={(swiper) => {
-              setCurrentSlide(swiper.realIndex + 1);
-            }}
-          >
-            {slides.map((slide) => (
-              <SwiperSlide key={slide.id} className="clickable image-slide">
-                <picture>
-                  <img
-                    className={isMobile ? "display-casino-mobile" : "display-pc"}
-                    src={slide.image}
-                    alt={`Banner ${slide.id + 1}`}
-                    title={`Banner ${slide.id + 1}`}
-                    loading="lazy"
-                  />
-                </picture>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <div className="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal w-100" />
-          <div className="disclaimer-container" style={{ display: 'block' }} />
-        </div>
+    <div className="jel-banner-double-container">
+      <div className="container">
+        <div className="jel-banner-double-container-ex">
+          <div className="jel-banner-double-left">
+            <div className="swiper-container swiper-initialized swiper-horizontal swiper-backface-hidden">
+              <Swiper
+                ref={swiperRef}
+                modules={[Autoplay, Pagination]}
+                slidesPerView={1}
+                pagination={{
+                  clickable: true,
+                  el: '.swiper-pagination',
+                }}
+                loop={true}
+                autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+                }}
+                className="swiper-wrapper"
+              >
+                {slides.map((slide) => (
+                  <SwiperSlide key={slide.id} className="swiper-slide">
+                    <div className="top-banner-component">
+                      <div className="image-container">
+                        <picture>
+                          <img
+                            className={isMobile ? "display-mobile" : "display-pc"}
+                            src={slide.image}
+                            alt={`Banner ${slide.id + 1}`}
+                            title={`Banner ${slide.id + 1}`}
+                            loading="lazy"
+                          />
+                        </picture>
+                      </div>
+                    </div>
+                  </SwiperSlide>
+                ))}
+              </Swiper>
 
-        {
-          !isMobile &&
-          <div id="navigation">
-            <div
-              className="arrow left"
-              onClick={handlePrevClick}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img">
-                <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z"></path>
-              </svg>
-            </div>
-            <div
-              className="arrow right"
-              onClick={handleNextClick}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" role="img">
-                <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path>
-              </svg>
+              <div className="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal" />
             </div>
           </div>
-        }
+          <div className="jel-banner-double-right">
+            <img src={ImgRightBanner} />
+          </div>
+        </div>
       </div>
     </div>
   );
