@@ -16,18 +16,24 @@ const CategoryContainer = (props) => {
 
   return (
     <>
-      <nav className="sc-grhCBx keEDki">
-        <div className="sc-gcqYyY fdQKXs cy-tabs-navigation-wrapper">
-          {props.categories.map((category, index) => (
-            <CategoryButton
-              key={category.id ?? category.code ?? index}
-              name={category.name}
-              code={category.code}
-              image={category.image}
-              active={props.selectedCategoryIndex === index}
-              onClick={() => handleCategoryClick(category, index)}
-            />
-          ))}
+      <nav className="filter-and-search-relative">
+        <div className="filter-and-search-cat">
+          <div className="filter-content">
+            <div className="swiper-container">
+              <div className="swiper-wrapper justify-content-center">
+                {props.categories.map((category, index) => (
+                  <CategoryButton
+                    key={category.id ?? category.code ?? index}
+                    name={category.name}
+                    code={category.code}
+                    image={category.image}
+                    active={props.selectedCategoryIndex === index}
+                    onClick={() => handleCategoryClick(category, index)}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </nav>
     </>

@@ -7,7 +7,7 @@ const SlideGameCard = (props) => {
     <div className="jel-slider-default-art">
       <div className="jel-slider-default-art-ex">
         <a
-          className="sc-gshygS iVtHBJ cy-live-casino-grid-item-thumbnail cursor-pointer"
+          className="cy-live-casino-grid-item-thumbnail cursor-pointer"
           onClick={props.onGameClick}
         >
           <span className="a-hover">

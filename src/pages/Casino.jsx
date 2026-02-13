@@ -11,7 +11,15 @@ import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import GameModal from "../components/Modal/GameModal";
 import LoadApi from "../components/Loading/LoadApi";
 import LoginModal from "../components/Modal/LoginModal";
-import ProviderContainer from "../components/ProviderContainer";
+import ProviderContainer from "../components/Casino/ProviderContainer";
+import CategoryContainer from "../components/CategoryContainer";
+
+import ImgCategoryHome from "/src/assets/svg/all.svg";
+import ImgCategoryPopular from "/src/assets/svg/new.svg";
+import ImgCategoryBlackjack from "/src/assets/svg/blackjack.svg";
+import ImgCategoryRoulette from "/src/assets/svg/roulette.svg";
+import ImgCategoryCrash from "/src/assets/svg/speed.svg";
+import ImgCategoryMegaways from "/src/assets/svg/gameshow.svg";
 
 let selectedGameId = null;
 let selectedGameType = null;
@@ -45,49 +53,13 @@ const Casino = () => {
   const { isSlotsOnly, isMobile } = useOutletContext();
 
   const pendingCategoryFetchesRef = useRef(0);
-  const isLoadingMainCategoriesRef = useRef(false);
 
   useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        const currentPath = window.location.pathname;
-
-        if (currentPath === '/casino' || currentPath.startsWith('/casino')) {
-          setShowFullDivLoading(true);
-
-          selectedGameId = null;
-          selectedGameType = null;
-          selectedGameLauncher = null;
-          selectedGameName = null;
-          selectedGameImg = null;
-          setGameUrl("");
-          setShouldShowGameModal(false);
-          setActiveCategory({});
-          setIsSingleCategoryView(false);
-
-          getPage("casino");
-        }
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!location.hash || tags.length === 0) {
-      if (!location.hash && tags.length > 0) {
-        getPage("casino");
-      }
-      return;
-    }
-
+    if (!location.hash || tags.length === 0) return;
     const hashCode = location.hash.replace('#', '');
     const tagIndex = tags.findIndex(t => t.code === hashCode);
 
-    if (tagIndex !== -1) {
+    if (tagIndex !== -1 && selectedCategoryIndex !== tagIndex) {
       setSelectedCategoryIndex(tagIndex);
       setIsSingleCategoryView(false);
       getPage(hashCode);
@@ -104,10 +76,7 @@ const Casino = () => {
     setShouldShowGameModal(false);
     setActiveCategory({});
     setIsSingleCategoryView(false);
-
-    if (!location.hash) {
-      getPage("casino");
-    }
+    getPage("casino");
 
     window.scrollTo(0, 0);
   }, [location.pathname]);
@@ -116,39 +85,22 @@ const Casino = () => {
     const isSlotsOnlyFalse = isSlotsOnly === false || isSlotsOnly === "false";
     let tmpTags = isSlotsOnlyFalse
       ? [
-        { name: "Lobby", code: "home" },
-        { name: "Juegos Nuevos", code: "hot" },
-        { name: "Jokers", code: "joker" },
-        { name: "Juegos de crash", code: "arcade" },
-        { name: "Megaways", code: "megaways" },
-        { name: "Ruletas", code: "roulette" },
+        { name: "Lobby", code: "home", image: ImgCategoryHome },
+        { name: "Hot", code: "hot", image: ImgCategoryPopular },
+        { name: "Jokers", code: "joker", image: ImgCategoryBlackjack },
+        { name: "Ruletas", code: "roulette", image: ImgCategoryRoulette },
+        { name: "Crash", code: "arcade", image: ImgCategoryCrash },
+        { name: "Megaways", code: "megaways", image: ImgCategoryMegaways },
       ]
       : [
-        { name: "Lobby", code: "home" },
-        { name: "Juegos Nuevos", code: "hot" },
-        { name: "Jokers", code: "joker" },
-        { name: "Megaways", code: "megaways" },
+        { name: "Lobby", code: "home", image: ImgCategoryHome },
+        { name: "Hot", code: "hot", image: ImgCategoryPopular },
+        { name: "Jokers", code: "joker", image: ImgCategoryBlackjack },
+        { name: "Megaways", code: "megaways", image: ImgCategoryMegaways },
       ];
 
     setTags(tmpTags);
   }, [isSlotsOnly]);
-
-  useEffect(() => {
-    if (mainCategories.length === 0 && !isLoadingMainCategoriesRef.current) {
-      isLoadingMainCategoriesRef.current = true;
-      setTimeout(() => {
-        callApi(contextData, "GET", "/get-page?page=home", (result) => {
-          isLoadingMainCategoriesRef.current = false;
-          if (result.status !== 500 && result.status !== 422) {
-            if (result.data && result.data.categories && result.data.categories.length > 0) {
-              setMainCategories(result.data.categories);
-              setCategories(result.data.categories);
-            }
-          }
-        }, null);
-      }, 1000);
-    }
-  }, []);
 
   const getPage = (page) => {
     setIsLoadingGames(true);
@@ -160,7 +112,8 @@ const Casino = () => {
 
   const callbackGetPage = (result, page) => {
     if (result.status === 500 || result.status === 422) {
-
+      setIsLoadingGames(false);
+      setShowFullDivLoading(false);
     } else {
       setCategoryType(result.data.page_group_type);
       setSelectedProvider(null);
@@ -172,11 +125,9 @@ const Casino = () => {
 
       if (result.data && result.data.page_group_type === "categories" && result.data.categories && result.data.categories.length > 0) {
         setCategories(result.data.categories);
-
-        if (page === "casino" || page === "home") {
+        if (page === "casino") {
           setMainCategories(result.data.categories);
         }
-
         const firstCategory = result.data.categories[0];
         setActiveCategory(firstCategory);
 
@@ -184,16 +135,14 @@ const Casino = () => {
         if (firstFiveCategories.length > 0) {
           setFirstFiveCategoriesGames([]);
           pendingCategoryFetchesRef.current = firstFiveCategories.length;
-          setIsLoadingGames(true);
+          setShowFullDivLoading(true);
           firstFiveCategories.forEach((item, index) => {
             fetchContentForCategory(item, item.id, item.table_name, index, true, result.data.page_group_code);
           });
         }
       } else if (result.data && result.data.page_group_type === "games") {
         setIsSingleCategoryView(true);
-
         setCategories(mainCategories.length > 0 ? mainCategories : []);
-
         configureImageSrc(result);
         setGames(result.data.categories || []);
         setActiveCategory(tags[tagIndex] || { name: page });
@@ -365,22 +314,13 @@ const Casino = () => {
     setShowLoginModal(false);
   };
 
-  const handleProviderSelect = (provider, index = 0) => {
+    const handleProviderSelect = (provider, index = 0) => {
     setSelectedProvider(provider);
 
     if (provider) {
-      // Open the search UI
-      document.body.classList.add('hc-opened-search');
-      
-      // Set the search text to provider name
-      setTxtSearch(provider.name || '');
-      
-      // Mark that provider is selected to disable search input
-      setIsProviderSelected(true);
+      setActiveCategory(null);
+      setSelectedCategoryIndex(-1);
 
-      // Clear existing search games to show loading state
-      setSearchGames([]);
-      
       fetchContent(
         provider,
         provider.id,
@@ -393,19 +333,18 @@ const Casino = () => {
         setMobileShowMore(true);
       }
     } else {
-      // Clear search when deselecting provider
-      setTxtSearch('');
-      document.body.classList.remove('hc-opened-search');
-      setSearchGames([]);
-      
-      // Enable search input again
-      setIsProviderSelected(false);
-      
       const firstCategory = categories[0];
       if (firstCategory) {
+        setActiveCategory(firstCategory);
+        setSelectedCategoryIndex(0);
         fetchContent(firstCategory, firstCategory.id, firstCategory.table_name, 0, true);
       }
     }
+  };
+
+  const handleCategorySelect = (category) => {
+    setActiveCategory(category);
+    setSelectedProvider(null);
   };
 
   return (
@@ -437,6 +376,29 @@ const Casino = () => {
         <>
           <>
             <Slideshow />
+
+            <CategoryContainer
+              categories={tags}
+              selectedCategoryIndex={selectedCategoryIndex}
+              onCategoryClick={(tag, _id, _table, index) => {
+                if (window.location.hash !== `#${tag.code}`) {
+                  window.location.hash = `#${tag.code}`;
+                } else {
+                  setSelectedCategoryIndex(index);
+                  getPage(tag.code);
+                }
+              }}
+              onCategorySelect={handleCategorySelect}
+              isMobile={isMobile}
+              pageType="casino"
+            />
+
+            <ProviderContainer
+              categories={categories}
+              selectedProvider={selectedProvider}
+              setSelectedProvider={setSelectedProvider}
+              onProviderSelect={handleProviderSelect}
+            />            
 
             {isSingleCategoryView ? (
               <div className="casino">
@@ -515,13 +477,6 @@ const Casino = () => {
               </div>
             )}
           </div> */}
-
-          <ProviderContainer
-            categories={categories}
-            selectedProvider={selectedProvider}
-            setSelectedProvider={setSelectedProvider}
-            onProviderSelect={handleProviderSelect}
-          />
 
           <Footer />
         </>

@@ -47,10 +47,7 @@ const ProviderContainer = ({
                                 ref={swiperRef}
                                 modules={[Navigation]}
                                 spaceBetween={0}
-                                slidesPerView="6"
-                                centeredSlides={false}
-                                grabCursor={true}
-                                loop={true}
+                                slidesPerView={6}
                                 navigation={{
                                     prevEl: prevRef.current,
                                     nextEl: nextRef.current,
@@ -72,7 +69,12 @@ const ProviderContainer = ({
                                             <SwiperSlide key={idx} className="swiper-slide">
                                                 <div className="jel-games-provider-art" onClick={(e) => handleClick(e, provider)}>
                                                     <a className="jel-games-provider-art-ex cursor-pointer">
-                                                        <span className="jel-games-provider-art-figure" style={{backgroundImage: `url(${imageUrl})`}}></span>
+                                                        {
+                                                            provider.image_local ? 
+                                                            <span className="jel-games-provider-art-figure" title={provider?.name} style={{backgroundImage: `url(${imageUrl})`}}></span> :
+                                                            <span className="jel-games-provider-art-figure jel-games-provider-art-text">{ provider?.name }</span>
+                                                        }
+
                                                         <span className="btn jel-games-provider-btn">Ver juegos</span>
                                                     </a>
                                                 </div>

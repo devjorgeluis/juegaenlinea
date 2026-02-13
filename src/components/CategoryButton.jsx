@@ -1,15 +1,20 @@
 const CategoryButton = ({ name, image, active = false, onClick }) => {
-  const baseClass = "sc-KyHQC sc-jiWiVj";
+  const baseClass = "swiper-slide";
+  const baseSubClass = "filter-lc-ex";
 
-  const activeClass = active ? "dJjjJJ bAQHIv" : "XMojM bzqLNn";
+  const activeClass = active ? "swiper-slide-active" : "";
+  const activeSubClass = active ? "active" : "";
 
   return (
-    <a className="sc-ciMfCw ja-dRuB cy-tabs-navigation-menu-item" onClick={onClick}>
-      <div className={`${baseClass} ${activeClass}`}>
-        <img src={image} className="sc-bqOBqt PBviZ" alt={name} style={{ width: "2rem", height: "2rem" }} />
-        {name}
+    <div className={`${baseClass} ${activeClass}`} onClick={onClick}>
+      <div className="filter-lc">
+        <div className={`${baseSubClass} ${activeSubClass}`}>
+          <img src={image} alt={name} width={35} />
+          <br />
+          {name}
+        </div>
       </div>
-    </a>
+    </div>
   );
 };
 

@@ -30130,6 +30130,12 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     padding-top: 60%
 }
 
+.jel-games-providers-module .jel-games-providers-module-ex .jel-games-providers-module-body .jel-games-providers-module-body-ex .jel-games-provider-art .jel-games-provider-art-ex .jel-games-provider-art-figure.jel-games-provider-art-text {
+    padding-top: 25%;
+    padding-bottom: 25%;
+    text-align: center;
+}
+
 .jel-games-providers-module .jel-games-providers-module-ex .jel-games-providers-module-body .jel-games-providers-module-body-ex .jel-games-provider-art .jel-games-provider-art-ex .jel-games-provider-art-date {
     display: block;
     padding-bottom: 25px;
@@ -33147,6 +33153,18 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     display: block;
     padding-top: 42%;
     width: 100%
+}
+
+.casino-filter-and-search .filter-and-search .filter-content .filter-lc .filter-lc-ex {
+    background-size: contain;
+}
+
+.casino-filter-and-search .filter-and-search .filter-content .filter-lc .filter-lc-ex.filter-lc-ex-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 17% 0;
+    height: 100%;
 }
 
 .filter-and-search .filter-content .filter-lc .filter-lc-ex.active {

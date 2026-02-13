@@ -48,46 +48,48 @@ const HotGameSlideshow = ({ games, name, title, onGameClick }) => {
                 <div className="jel-slider-default-five-ex">
                     {
                         games.length > 6 ?
-                            <>
-                                <Swiper
-                                    ref={swiperRef}
-                                    modules={[Navigation]}
-                                    slidesPerView={6}
-                                    spaceBetween={0}
-                                    breakpoints={{
-                                        0: { slidesPerView: 3 },
-                                        576: { slidesPerView: 4 },
-                                        992: { slidesPerView: 6 }
-                                    }}
-                                    navigation={{
-                                        prevEl: prevRef.current,
-                                        nextEl: nextRef.current,
-                                    }}
-                                    className="swiper-container swiper-initialized swiper-horizontal"
-                                >
-                                    {games?.map((game, index) => (
-                                        <SwiperSlide
-                                            key={`hot-${title}-${name}-${game.id ?? index}-${index}`}
-                                        >
-                                            <SlideGameCard
-                                                id={game.id}
-                                                category="slide"
-                                                provider={title}
-                                                title={game.name}
-                                                imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
-                                                onGameClick={() => {
-                                                    handleGameClick(game);
-                                                }}
-                                            />
-                                        </SwiperSlide>
-                                    ))}
-                                    <div className="swiper-button-next" onClick={handleNext}><i className="fa-solid fa-angle-right"></i></div>
-                                    <div className="swiper-button-prev" onClick={handlePrev}><i className="fa-solid fa-angle-left"></i></div>
-                                </Swiper>
-                            </> :
-                            <div className="game-list">
+                        <>
+                            <Swiper
+                                ref={swiperRef}
+                                modules={[Navigation]}
+                                slidesPerView={6}
+                                spaceBetween={0}
+                                breakpoints={{
+                                    0: { slidesPerView: 3 },
+                                    576: { slidesPerView: 4 },
+                                    992: { slidesPerView: 6 }
+                                }}
+                                navigation={{
+                                    prevEl: prevRef.current,
+                                    nextEl: nextRef.current,
+                                }}
+                                className="swiper-container swiper-initialized swiper-horizontal"
+                            >
+                                {games?.map((game, index) => (
+                                    <SwiperSlide
+                                        key={`hot-${title}-${name}-${game.id ?? index}-${index}`}
+                                    >
+                                        <SlideGameCard
+                                            id={game.id}
+                                            category="slide"
+                                            provider={title}
+                                            title={game.name}
+                                            imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
+                                            onGameClick={() => {
+                                                handleGameClick(game);
+                                            }}
+                                        />
+                                    </SwiperSlide>
+                                ))}
+                                <div className="swiper-button-next" onClick={handleNext}><i className="fa-solid fa-angle-right"></i></div>
+                                <div className="swiper-button-prev" onClick={handlePrev}><i className="fa-solid fa-angle-left"></i></div>
+                            </Swiper>
+                        </> :
+                        <div className="swiper-container swiper-initialized swiper-horizontal">
+                            <div className="swiper-wrapper">
                                 {games?.map((game, index) => (
                                     <div
+                                        className="swiper-slide"
                                         key={`hot-${title}-${name}-${game.id ?? index}-${index}`}
                                     >
                                         <SlideGameCard
@@ -103,8 +105,8 @@ const HotGameSlideshow = ({ games, name, title, onGameClick }) => {
                                     </div>
                                 ))}
                             </div>
+                        </div>
                     }
-
                 </div>
             </div>
         </div>
