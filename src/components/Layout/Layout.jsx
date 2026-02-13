@@ -43,7 +43,7 @@ const Layout = () => {
 
     const [txtSearch, setTxtSearch] = useState("");
     const [searchGames, setSearchGames] = useState([]);
-    const [isProviderSelected, setIsProviderSelected] = useState(false); // Add this state
+    const [isProviderSelected, setIsProviderSelected] = useState(false);
 
     const [shouldShowGameModal, setShouldShowGameModal] = useState(false);
     const [gameModalData, setGameModalData] = useState({
@@ -56,6 +56,8 @@ const Layout = () => {
     });
     const refGameModal = useRef();
     const navigate = useNavigate();
+    const location = useLocation();
+    const isSportsPage = location.pathname === "/sports" || location.pathname === "/live-sports";
 
     const toggleSidebar = () => {
         setIsSidebarExpanded(!isSidebarExpanded);
@@ -340,12 +342,6 @@ const Layout = () => {
                     </div>
                 </div>
 
-                {!shouldShowGameModal && (
-                    <div className={isLogin ? "account-background" : ""}>
-
-                    </div>
-                )}
-
                 {shouldShowGameModal && gameModalData.gameUrl && (
                     <GameModal
                         gameUrl={gameModalData.gameUrl}
@@ -371,13 +367,13 @@ const Layout = () => {
                     supportParentOnly={supportParentOnly}
                     supportParent={supportParent}
                 />
-                {isMobile &&
+                {isMobile && !isSportsPage &&
                     <MobileFooter
                         isSlotsOnly={isSlotsOnly}
-                        isMobile={isMobile}
                         isLogin={isLogin}
                         supportParent={supportParent}
                         openSupportModal={openSupportModal}
+                        handleLoginClick={handleLoginClick}
                     />}
             </NavigationContext.Provider>
         </LayoutContext.Provider>

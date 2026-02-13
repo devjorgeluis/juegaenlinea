@@ -142,7 +142,7 @@ const Header = ({
                 <div className="header-wrapper">
                     <div className="container-fluid container-h d-flex">
                         <div className="header-left">
-                            <a href="#" className="mobile-logo hm-show">
+                            <a onClick={() => navigate("/")} className="mobile-logo hm-show">
                                 <img src={ImgFavicon3} />
                             </a>
                         </div>

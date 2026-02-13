@@ -1,9 +1,6 @@
 import { useState, useEffect, useContext, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LayoutContext } from "./LayoutContext";
-import { AppContext } from "../../AppContext";
-import { callApi } from "../../utils/Utils";
-// import SearchInput from "../SearchInput";
 import ImgHome from "/src/assets/svg/home.svg";
 import ImgCasino from "/src/assets/svg/casino.svg";
 import ImgLiveCasino from "/src/assets/svg/live-casino.svg";
@@ -11,69 +8,58 @@ import ImgSports from "/src/assets/svg/sports.svg";
 import ImgLiveSports from "/src/assets/img/deslizalo.png";
 import ImgTime from "/src/assets/img/time-animate2.png";
 import ImgLogin from "/src/assets/svg/login.svg";
-
-// import ImgMobileCircleSport from "/src/assets/svg/mobile-circle-sport.svg";
-// import ImgMobileCircleLiveSport from "/src/assets/svg/mobile-circle-blue-sport.svg";
-// import ImgMobileLogo from "/src/assets/svg/mobile-logo.svg";
-// import ImgMobileHome from "/src/assets/svg/mobile-home.svg";
-// import ImgMobileCasino from "/src/assets/svg/mobile-casino.svg";
-// import ImgMobileLiveCasino from "/src/assets/svg/mobile-live-casino.svg";
-// import ImgMobileSports from "/src/assets/svg/mobile-sports.svg";
-// import ImgArrowLeft from "/src/assets/svg/arrow-left.svg";
-// import ImgSearch from "/src/assets/svg/search.svg";
 import ImgPhone from "/src/assets/svg/phone.svg";
+import ImgLogo from "/src/assets/img/logo.png";
 
 const MobileFooter = ({
     isSlotsOnly,
     isLogin,
-    isMobile,
     supportParent,
     openSupportModal,
-    handleLogoutClick,
+    handleLoginClick
 }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { isSidebarExpanded, toggleSidebar, setShowMobileSearch } = useContext(LayoutContext);
-    const { contextData } = useContext(AppContext);
-
+    const { isSidebarExpanded, toggleSidebar } = useContext(LayoutContext);
     const [expandedMenus, setExpandedMenus] = useState([]);
-    const [liveCasinoMenus, setLiveCasinoMenus] = useState([]);
-    const [hasFetchedLiveCasino, setHasFetchedLiveCasino] = useState(false);
-    const [games, setGames] = useState([]);
-    const [txtSearch, setTxtSearch] = useState("");
-    const [searchDelayTimer, setSearchDelayTimer] = useState();
-    const searchRef = useRef(null);
-    const [isLoadingGames, setIsLoadingGames] = useState(false);
-    const [isSearchActive, setIsSearchActive] = useState(false);
+    const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+
+    const iconRefs = useRef({});
+    const sidebarRef = useRef(null);
+    const hamburgerRef = useRef(null);
 
     const isSlotsOnlyMode = isSlotsOnly === true || isSlotsOnly === "true";
     const isMenuExpanded = (menuId) => expandedMenus.includes(menuId);
 
     useEffect(() => {
-        setIsSearchActive(txtSearch.trim() !== "");
-    }, [txtSearch]);
+        const timer = setInterval(() => {
+            setCurrentTime(new Date().toLocaleTimeString());
+        }, 1000);
 
-    const handleNavigation = (item) => () => {
-        if (item.action) {
-            item.action();
-        } else if (item.href !== "#") {
-            navigate(item.href);
-        }
+        return () => clearInterval(timer);
+    }, []);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                isSidebarExpanded &&
+                sidebarRef.current &&
+                !sidebarRef.current.contains(event.target) &&
+                hamburgerRef.current &&
+                !hamburgerRef.current.contains(event.target)
+            ) {
+                closeSidebar();
+            }
+        };
+
         if (isSidebarExpanded) {
-            toggleSidebar();
+            document.addEventListener('mousedown', handleClickOutside);
         }
-    };
 
-    const handleSimpleNavigation = (path) => () => {
-        navigate(path);
-        if (isSidebarExpanded) {
-            toggleSidebar();
-        }
-    };
-
-    const toggleUserMenu = () => {
-        setIsUserMenuOpen(!isUserMenuOpen);
-    };
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isSidebarExpanded]);
 
     const isMenuActive = (item) => {
         const currentPath = location.pathname;
@@ -92,6 +78,11 @@ const MobileFooter = ({
         }
 
         return false;
+    };
+
+    const isBottomNavActive = (path) => {
+        const currentPath = location.pathname;
+        return currentPath === path;
     };
 
     const showFullMenu = isSlotsOnly === "false" || isSlotsOnly === false;
@@ -154,14 +145,84 @@ const MobileFooter = ({
             : []),
     ];
 
-    const isBottomNavActive = (path) => {
-        const currentPath = location.pathname;
+    const isSubItemActive = (subItem) => {
+        return location.pathname + location.hash === subItem.href;
+    };
+
+    const closeSidebar = () => {
+        if (isSidebarExpanded) {
+            toggleSidebar();
+            setTimeout(() => {
+                document.body.classList.remove('sideDiff');
+            }, 10);
+        }
+    };
+
+    const handleMenuClick = (href, item, e) => {
+        e.preventDefault();
         
-        if (path === "/casino" && currentPath === "/casino") {
-            return true;
+        if (item && item.subItems) {
+            e.stopPropagation();
+            toggleSubmenu(item.id);
+            return;
         }
         
-        return currentPath === path;
+        if (item && item.action) {
+            closeSidebar();
+            item.action();
+            return;
+        }
+        
+        if (href && href !== "#") {
+            closeSidebar();
+            
+            if (href === location.pathname + location.hash) {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                    behavior: 'auto'
+                });
+            } else {
+                navigate(href);
+            }
+        }
+    };
+
+    const toggleSubmenu = (menuId) => {
+        setExpandedMenus((prev) => 
+            prev.includes(menuId) 
+                ? prev.filter(id => id !== menuId)
+                : [...prev, menuId]
+        );
+    };
+
+    const handleSubItemClick = (href, e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        closeSidebar();
+        navigate(href);
+        
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'auto'
+        });
+    };
+
+    const handleHamburgerClick = () => {
+        document.body.classList.toggle('sideDiff');
+        toggleSidebar();
+    };
+
+    const handleLogoClick = (e) => {
+        e.preventDefault();
+        closeSidebar();
+        navigate("/");
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'auto'
+        });
     };
 
     return (
@@ -169,15 +230,30 @@ const MobileFooter = ({
             <div className="navbar-mobile">
                 <div className="navbar-mobile-ex">
                     <div className="nav-mobile-item">
-                        <a className="btn-action-sidebar"><i className="fa-solid fa-bars"></i><span className="title">Menú</span></a>
-                    </div>
-                    <div className="nav-mobile-item">
-                        <a onClick={() => navigate("/casino")} className="active">
-                            <img src={ImgCasino} width="20px" /><span className="title">Casino</span>
+                        <a 
+                            className="btn-action-sidebar" 
+                            onClick={handleHamburgerClick}
+                            ref={hamburgerRef}
+                        >
+                            <i className="fa-solid fa-bars"></i><span className="title">Menú</span>
                         </a>
                     </div>
+                    {
+                        showFullMenu &&
+                        <div className="nav-mobile-item">
+                            <a
+                                onClick={() => navigate("/sports")}
+                                className={`${isBottomNavActive("/sports") ? "router-link-active router-link-exact-active active" : ""}`}
+                            >
+                                <img src={ImgSports} width="20px" /><span className="title">Deportes</span>
+                            </a>
+                        </div>
+                    }
                     <div className="nav-mobile-item">
-                        <a onClick={() => navigate("/")} className="a-special">
+                        <a
+                            onClick={() => navigate("/")}
+                            className={`a-special ${isBottomNavActive("/") ? "router-link-active router-link-exact-active active" : ""}`}
+                        >
                             <span className="icon-scale">
                                 <img src={ImgHome} width="30px" />
                             </span>
@@ -186,97 +262,169 @@ const MobileFooter = ({
                         </a>
                     </div>
                     <div className="nav-mobile-item">
-                        <a onClick={() => navigate("/login")}>
-                            <img src={ImgLogin} width="20px" /><span className="title">Ingresar</span>
+                        <a
+                            onClick={() => navigate("/casino")}
+                            className={`${isBottomNavActive("/casino") ? "router-link-active router-link-exact-active active" : ""}`}
+                        >
+                            <img src={ImgCasino} width="20px" /><span className="title">Casino</span>
                         </a>
                     </div>
-                    <div className="nav-mobile-item">
-                        <a onClick={() => navigate("sports")}>
-                            <img src={ImgSports} width="20px" /><span className="title">Deportes</span>
-                        </a>
-                    </div>
+                    {
+                        isLogin && showFullMenu ?
+                            <div className="nav-mobile-item">
+                                <a
+                                    onClick={() => navigate("/live-casino")}
+                                    className={`${isBottomNavActive("/live-casino") ? "router-link-active router-link-exact-active active" : ""}`}
+                                >
+                                    <img src={ImgLiveCasino} width="20px" /><span className="title">En vivo</span>
+                                </a>
+                            </div> : <div className="nav-mobile-item">
+                                <a
+                                    onClick={() => handleLoginClick()}
+                                    className={`${isBottomNavActive("/login") ? "router-link-active router-link-exact-active active" : ""}`}
+                                >
+                                    <img src={ImgLogin} width="20px" /><span className="title">Ingresar</span>
+                                </a>
+                            </div>
+                    }
                 </div>
             </div>
 
+            {isSidebarExpanded && (
+                <div className="sidebar" ref={sidebarRef}>
+                    <div className="sidebar-head d-flex">
+                        <button className="btn btn-sidebar btn-action-sidebar" onClick={handleHamburgerClick}>
+                            <i className="fa-solid fa-bars"></i>
+                        </button>
 
-            {/* {isSidebarExpanded && (
-                <div className="sc-gvsNSq jxqyxT cy-main-nav open-menu">
-                    <div className="sc-daLoug sc-dXijah hUcPdj bDBgJW">
-                        <div className="sc-codVKW bPGlzn">
-                            <div className="sc-fEyyHY cwRgmi">
-                                <div className="sc-etyUPJ gNGgmX cy-close-mobile-menu-icon">
-                                    <img src={ImgArrowLeft} onClick={toggleSidebar} style={{ cursor: 'pointer' }} />
-                                </div>
-                            </div>
-                            <div className="sc-fEyyHY cwRgmi">
-                                <div className="sc-yWEwC sc-bvtzcD cOhCUT bwJqBY cy-logo-container">
-                                    <a onClick={handleSimpleNavigation("/")} className="sc-ciMfCw ja-dRuB" style={{ cursor: 'pointer' }}>
-                                        <img src={ImgMobileLogo} className="sc-gHXKQl eKXwKk logo cy-logo" />
-                                    </a>
-                                </div>
-                            </div>
-                            <div className="sc-fEyyHY cwRgmi"></div>
-                        </div>
-                        <div className="sc-hhFrFd bCsUbK">
-                            <div className="sc-gSONCE sc-dxYMJA fxKZYg gpHIWH">
-                                <div className="sc-iYjPCr gWmbXn cy-side-menu">
-                                    <div className="sc-gKjrUP ieYZAJ cy-menu-links-group cy-menu-links-cross-brands-group">
-                                        <li className="sc-kIfdec jmRoun cy-menu-item">
-                                            <a onClick={handleSimpleNavigation("/sports")} className="sc-ciMfCw ja-dRuB" style={{ cursor: 'pointer' }}>
-                                                <div className="sc-cAeysB fHjzIS">
-                                                    <div className="sc-dGzCaO bRZDKe">
-                                                        <img src={ImgMobileCircleSport} />
-                                                    </div>
-                                                    <span className="sc-KeRuP fuWdtC">Deportes</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                        <li className="sc-kIfdec jmRoun cy-menu-item">
-                                            <a onClick={handleSimpleNavigation("/live-sports")} className="sc-ciMfCw ja-dRuB" style={{ cursor: 'pointer' }}>
-                                                <div className="sc-cAeysB fPYrue">
-                                                    <div className="sc-dGzCaO bRZDKe">
-                                                        <img src={ImgMobileCircleLiveSport} />
-                                                    </div>
-                                                    <span className="sc-KeRuP fuWdtC">En Vivo</span>
-                                                </div>
-                                            </a>
-                                        </li>
-                                    </div>
-                                    {!isSearchActive && (
-                                        <section className="sc-klCKcm sc-kZzZex eLAEaM jdUfX">
-                                            <div className="sc-MKQME sc-jlirRl ekPQQx fJgckN">
-                                                <ul className="cy-menu-links-group">
-                                                    {menuItems.map((item, index) => {
-                                                        const isActive = isMenuActive(item);
-                                                        const isLast = index === menuItems.length - 1;
+                        <a
+                            onClick={handleLogoClick}
+                            className="sidebar-logo"
+                            href="/"
+                        >
+                            <img alt="Logo" src={ImgLogo} />
+                        </a>
+                    </div>
 
-                                                        return (
-                                                            <div key={item.id}>
-                                                                <li className="sc-fkVSuP sc-bsyrka izPQbG kxFylD cy-menu-item">
-                                                                    <a onClick={handleNavigation(item)} className="sc-ciMfCw ja-dRuB" style={{ cursor: 'pointer' }}>
-                                                                        <div className={`sc-gPLYmt sc-cjShfW efmGEW bDGwEc ${isActive ? "dtqOUd" : ""}`}>
-                                                                            <span className="sc-iDhmSy jagTrD"></span>
-                                                                            <div className={`sc-dgWXKx sc-bsStmr dvyXko hWgsTC ${isLast ? "phone" : ""}`}>
-                                                                                <img src={item.image} className="sc-bqOBqt PBviZ" alt={item.name} />
-                                                                            </div>
-                                                                            <span className="sc-bMhjqq sc-kfiijn eeQnce gwhmuu">{item.name}</span>
-                                                                        </div>
-                                                                    </a>
-                                                                </li>
-                                                                <div className="sc-cLVYFp sc-kiUgTw cSIQFP hPFZit"></div>
-                                                            </div>
-                                                        );
-                                                    })}
-                                                </ul>
+                    <div className="sidebar-body">
+                        <div className="sidebar-body-ex">
+                            <div className="sidebar-title">
+                                <span className="icon">
+                                    <i className="fa-solid fa-bolt back"></i>
+                                    <i className="fa-solid fa-bolt front"></i>
+                                </span>
+                                Panel
+                            </div>
+
+                            <div className="sidebar-item-list">
+                                <div>
+                                    {menuItems.map((item) => {
+                                        const itemRef = (el) => (iconRefs.current[item.id] = el);
+                                        const isActive = isMenuActive(item);
+                                        const isExpanded = isMenuExpanded(item.id);
+                                        const hasSubItems = item.subItems && item.subItems.length > 0;
+
+                                        return (
+                                            <div className="sidebar-item" ref={itemRef} key={item.id}>
+                                                <a
+                                                    href={item.href}
+                                                    onClick={(e) => handleMenuClick(item.href, item, e)}
+                                                    className={`btn ${isActive ? "btn-featured" : ""} ${hasSubItems ? "has-submenu" : ""}`}
+                                                >
+                                                    <span className="sidebar-item-icon">
+                                                        <img src={item.image} alt={item.name} />
+                                                    </span>
+                                                    <span className="sidebar-item-name">{item.name}</span>
+                                                    {hasSubItems && (
+                                                        <span
+                                                            className={`sidebar-item-collapse ${isExpanded ? 'expanded' : ''}`}
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                toggleSubmenu(item.id);
+                                                            }}
+                                                        >
+                                                            <span className="more">
+                                                                <i className={`fa-solid ${isExpanded ? "fa-minus" : "fa-plus"}`}></i>
+                                                            </span>
+                                                            <span className="minus">
+                                                                <i className="fa-solid fa-minus"></i>
+                                                            </span>
+                                                        </span>
+                                                    )}
+                                                </a>
+                                                {hasSubItems && (
+                                                    <div className={`collapse ${isExpanded ? 'show' : ''}`} id={`collapse-${item.id}`}>
+                                                        <div className="card card-body">
+                                                            <ul>
+                                                                {item.subItems.map((subItem, subIndex) => {
+                                                                    const isSubActive = isSubItemActive(subItem);
+                                                                    return (
+                                                                        <li key={subIndex}>
+                                                                            <a
+                                                                                href={subItem.href}
+                                                                                onClick={(e) => handleSubItemClick(subItem.href, e)}
+                                                                                className={isSubActive ? 'active' : ''}
+                                                                            >
+                                                                                <span className="a-icon">
+                                                                                    <i className={subItem.image}></i>
+                                                                                </span>
+                                                                                <span className="a-name">{subItem.name}</span>
+                                                                            </a>
+                                                                        </li>
+                                                                    );
+                                                                })}
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
-                                        </section>
-                                    )}
+                                        );
+                                    })}
+                                </div>
+                            </div>
+
+                            <hr />
+
+                            <div className="sidebar-extra">
+                                <div className="sidebar-time">
+                                    <div className="sidebar-time-ex">
+                                        <div className="sidebar-time-figure">
+                                            <img src={ImgTime} alt="time" />
+                                        </div>
+
+                                        <div className="sidebar-time-text">
+                                            <span className="span">{currentTime}</span>
+                                        </div>
+                                    </div>
+
+                                    <p className="mt-1">Hora local</p>
+                                </div>
+
+                                <div className="sidebar-social">
+                                    <a
+                                        href="https://www.instagram.com/juegaenlinea/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i className="fa-brands fa-instagram"></i>
+                                    </a>
+
+                                    <a
+                                        href="https://www.facebook.com/juegaenlineacom/"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <i className="fa-brands fa-facebook"></i>
+                                    </a>
+
+                                    <p>Síguenos en redes</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            )} */}
+            )}
         </>
     );
 };
