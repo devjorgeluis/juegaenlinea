@@ -29,12 +29,15 @@ const Profile = () => {
 
     useEffect(() => {
         const hash = location.hash.replace('#', '');
+        
         if (hash === 'transaction' || hash === 'transactions') {
             setActiveMainTab("record");
             setActiveRecordTab("transactions");
         } else if (hash === 'history') {
             setActiveMainTab("record");
             setActiveRecordTab("history");
+        } else {
+            setActiveMainTab("profile");
         }
     }, [location.hash]);
 
