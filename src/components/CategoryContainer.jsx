@@ -52,6 +52,9 @@ const CategoryContainer = (props) => {
                       prevEl: prevRef.current,
                       nextEl: nextRef.current,
                     }}
+                    breakpoints={{
+                      320: { slidesPerView: 4 },
+                    }}
                     className="swiper-container swiper-initialized swiper-horizontal"
                   >
                     {props.categories.map((category, idx) => {
@@ -68,12 +71,16 @@ const CategoryContainer = (props) => {
                         </SwiperSlide>
                       );
                     })}
-                    <div className="swiper-button-next" onClick={handleNext}>
-                      <i className="fa-solid fa-angle-right"></i>
-                    </div>
-                    <div className="swiper-button-prev" onClick={handlePrev}>
-                      <i className="fa-solid fa-angle-left"></i>
-                    </div>
+                    {
+                      props.categories.length > 4 && <>
+                        <div className="swiper-button-next" onClick={handleNext}>
+                          <i className="fa-solid fa-angle-right"></i>
+                        </div>
+                        <div className="swiper-button-prev" onClick={handlePrev}>
+                          <i className="fa-solid fa-angle-left"></i>
+                        </div>
+                      </>
+                    }
                   </Swiper>
                 ) : (
                   props.categories.map((category, index) => (
