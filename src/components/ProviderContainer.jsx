@@ -83,8 +83,12 @@ const ProviderContainer = ({
                                     })
                                 }
 
-                                <div className="swiper-button-next" onClick={handleNext}><i className="fa-solid fa-angle-right"></i></div>
-                                <div className="swiper-button-prev" onClick={handlePrev}><i className="fa-solid fa-angle-left"></i></div>                                
+                                {
+                                    providers.length > 5 && <>
+                                        <div className="swiper-button-next" onClick={handleNext}><i className="fa-solid fa-angle-right"></i></div>
+                                        <div className="swiper-button-prev" onClick={handlePrev}><i className="fa-solid fa-angle-left"></i></div>  
+                                    </>
+                                }
                             </Swiper>
                         </div>
                     </div>

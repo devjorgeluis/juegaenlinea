@@ -31,7 +31,7 @@ let pageCurrent = 0;
 const Casino = () => {
   const pageTitle = "Casino";
   const { contextData } = useContext(AppContext);
-  const { isLogin, txtSearch, setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
+  const { isLogin } = useContext(LayoutContext);
   const { setShowFullDivLoading } = useContext(NavigationContext);
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [tags, setTags] = useState([]);
@@ -249,12 +249,8 @@ const Casino = () => {
 
       if (pageCurrent === 0) {
         setGames(newGames);
-        // ALWAYS set search games immediately
-        setSearchGames(newGames);
       } else {
         setGames((prevGames) => [...prevGames, ...newGames]);
-        // Also update search games for pagination
-        setSearchGames((prevGames) => [...prevGames, ...newGames]);
       }
 
       if (newGames.length > 0) {
@@ -314,7 +310,7 @@ const Casino = () => {
     setShowLoginModal(false);
   };
 
-    const handleProviderSelect = (provider, index = 0) => {
+  const handleProviderSelect = (provider, index = 0) => {
     setSelectedProvider(provider);
 
     if (provider) {
@@ -398,7 +394,7 @@ const Casino = () => {
               selectedProvider={selectedProvider}
               setSelectedProvider={setSelectedProvider}
               onProviderSelect={handleProviderSelect}
-            />            
+            />
 
             {isSingleCategoryView ? (
               <div className="casino">

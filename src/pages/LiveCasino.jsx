@@ -1,12 +1,13 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import { useLocation, useOutletContext, useNavigate } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import { AppContext } from "../AppContext";
 import { LayoutContext } from "../components/Layout/LayoutContext";
 import { NavigationContext } from "../components/Layout/NavigationContext";
 import { callApi } from "../utils/Utils";
-// import LiveCasinoGameCard from "../components/LiveCasinoGameCard";
+import LiveCasinoGameCard from "../components/LiveCasinoGameCard.jsx";
 import GameModal from "../components/Modal/GameModal";
 import ProviderModal from "../components/Modal/ProviderModal";
+import Slideshow from "../components/LiveCasino/Slideshow.jsx";
 import HotGameSlideshow from "../components/Home/HotGameSlideshow";
 import ProviderContainer from "../components/ProviderContainer";
 import Footer from "../components/Layout/Footer";
@@ -23,9 +24,8 @@ let pageCurrent = 0;
 const LiveCasino = () => {
   const pageTitle = "Casino en Vivo";
   const { contextData } = useContext(AppContext);
-  const { isLogin, txtSearch, setTxtSearch, searchGames, setSearchGames, setIsProviderSelected } = useContext(LayoutContext);
+  const { isLogin } = useContext(LayoutContext);
   const { setShowFullDivLoading } = useContext(NavigationContext);
-  const navigate = useNavigate();
   const [selectedCategoryIndex, setSelectedCategoryIndex] = useState(0);
   const [games, setGames] = useState([]);
   const [firstFiveCategoriesGames, setFirstFiveCategoriesGames] = useState([]);
@@ -221,7 +221,7 @@ const LiveCasino = () => {
   const fetchContent = (category, categoryId, tableName, categoryIndex, resetCurrentPage) => {
     if (!categoryId || !tableName) {
       if (category.code === "home") {
-        const pageSize = 30;
+        const pageSize = 500;
         setIsLoadingGames(true);
         if (resetCurrentPage) {
           pageCurrent = 0;
@@ -240,7 +240,7 @@ const LiveCasino = () => {
       setIsLoadingGames(false);
       return;
     }
-    let pageSize = 30;
+    let pageSize = 500;
     setIsLoadingGames(true);
 
     if (resetCurrentPage) {
@@ -283,10 +283,8 @@ const LiveCasino = () => {
       
       if (pageCurrent == 0) {
         setGames(result.content);
-        setSearchGames(result.content);
       } else {
         setGames([...games, ...result.content]);
-        setSearchGames([...searchGames, ...result.content]);
       }
       pageCurrent += 1;
     }
@@ -345,83 +343,30 @@ const LiveCasino = () => {
   };
 
   const handleProviderSelect = (provider, index = 0) => {
-    if (categories.length > 0 && provider) {
-      if (provider.code === "home") {
-        setSelectedProvider(null);
-        setIsSingleCategoryView(false);
-        setActiveCategory(provider);
-        setSelectedCategoryIndex(0);
-        setGames([]);
-        setFirstFiveCategoriesGames([]);
-        
-        setTxtSearch('');
-        document.body.classList.remove('hc-opened-search');
-        setSearchGames([]);
-        setIsProviderSelected(false);
-        
-        const firstFiveCategories = categories.slice(1, 6);
-        if (firstFiveCategories.length > 0) {
-          pendingCategoryFetchesRef.current = firstFiveCategories.length;
-          setIsLoadingGames(true);
-          firstFiveCategories.forEach((item, index) => {
-            fetchContentForCategory(item, item.id, item.table_name, index, true, pageData.page_group_code);
-          });
-        } else {
-          setIsLoadingGames(false);
-        }
-        navigate("/live-casino#home");
-        lastLoadedCategoryRef.current = null;
-      } else {
-        // Selecting a provider
-        setSelectedProvider(provider);
-        setIsSingleCategoryView(true);
-        
-        // Set search text to provider name
-        setTxtSearch(provider.name || '');
-        
-        // Mark that provider is selected to disable search input
-        setIsProviderSelected(true);
-        
-        // Open the search UI
-        document.body.classList.add('hc-opened-search');
-        
-        // Clear existing search games to show loading state
-        setSearchGames([]);
-        
-        const providerIndex = categories.findIndex(cat => cat.id === provider.id);
-        setActiveCategory(provider);
-        setSelectedCategoryIndex(providerIndex !== -1 ? providerIndex : index);
-        fetchContent(provider, provider.id, provider.table_name, providerIndex !== -1 ? providerIndex : index, true);
-        lastLoadedCategoryRef.current = provider.code;
+    setSelectedProvider(provider);
+
+    if (provider) {
+      setActiveCategory(null);
+      setSelectedCategoryIndex(-1);
+
+      fetchContent(
+        provider,
+        provider.id,
+        provider.table_name,
+        index,
+        true
+      );
+
+      if (isMobile) {
+        setMobileShowMore(true);
       }
-    } else if (!provider && categories.length > 0) {
-      // No provider selected - reset to lobby
+    } else {
       const firstCategory = categories[0];
-      setSelectedProvider(null);
-      setIsSingleCategoryView(false);
-      setActiveCategory(firstCategory);
-      setSelectedCategoryIndex(0);
-      setGames([]);
-      setFirstFiveCategoriesGames([]);
-      
-      // Clear search state
-      setTxtSearch('');
-      document.body.classList.remove('hc-opened-search');
-      setSearchGames([]);
-      setIsProviderSelected(false);
-      
-      const firstFiveCategories = categories.slice(1, 6);
-      if (firstFiveCategories.length > 0) {
-        pendingCategoryFetchesRef.current = firstFiveCategories.length;
-        setIsLoadingGames(true);
-        firstFiveCategories.forEach((item, index) => {
-          fetchContentForCategory(item, item.id, item.table_name, index, true, pageData.page_group_code);
-        });
-      } else {
-        setIsLoadingGames(false);
+      if (firstCategory) {
+        setActiveCategory(firstCategory);
+        setSelectedCategoryIndex(0);
+        fetchContent(firstCategory, firstCategory.id, firstCategory.table_name, 0, true);
       }
-      navigate("/live-casino#home");
-      lastLoadedCategoryRef.current = null;
     }
   };
 
@@ -453,6 +398,8 @@ const LiveCasino = () => {
       {/* Only show LiveCasino content when game modal is NOT shown */}
       {!shouldShowGameModal && (
         <div className="casino">
+          <Slideshow />
+          
           <ProviderContainer
             categories={categories}
             selectedProvider={selectedProvider}
@@ -463,57 +410,57 @@ const LiveCasino = () => {
 
           {
             selectedProvider && selectedProvider.name ?
-              <div className="live-casino-page-wrapper cy-new-live-casino">
-                <div className="sc-eJeqbO dNBrZX cy-live-casino-grid">
-                  {/* {games.map((game) => (
-                    <LiveCasinoGameCard
-                      key={"popular" + game.id}
-                      id={game.id}
-                      provider={activeCategory?.name || 'Casino'}
-                      title={game.name}
-                      imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
-                      onClick={() => (isLogin ? launchGame(game, "slot", "tab") : handleLoginClick())}
-                    />
-                  ))} */}
-                </div>
-                <div className="my-3">
-                  {isLoadingGames && <LoadApi width={60} />}
-                  {(isSingleCategoryView || selectedProvider) && !isLoadingGames && (
-                    <div className="text-center">
-                      <a className="btn btn-success load-more" onClick={loadMoreGames}>
-                        Mostrar todo
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </div> :
-              <div className="sc-fLAQkk cujxUP cy-lobby-wrapper-arena">
-                {firstFiveCategoriesGames && firstFiveCategoriesGames.map((entry, catIndex) => {
-                  if (!entry || !entry.games) return null;
-                  const categoryKey = entry.category?.id || `cat-${catIndex}`;
-
-                  if (entry.games.length === 0) return null;
-
-                  return (
-                    <div key={categoryKey} className="casino-games-container">
-                      <div className="casino-games-container__list">
-                        <HotGameSlideshow
-                          games={entry.games.slice(0, 30)}
-                          name={entry.category.name}
-                          title={entry.category.name}
-                          onGameClick={(game) => {
-                            if (isLogin) {
-                              launchGame(game, "slot", "modal");
-                            } else {
-                              handleLoginClick();
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+            <div className="container">
+              <div className="body-games-lc">
+                {games.map((game) => (
+                  <LiveCasinoGameCard
+                    key={"popular" + game.id}
+                    id={game.id}
+                    provider={activeCategory?.name || 'Casino'}
+                    title={game.name}
+                    imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
+                    onClick={() => (isLogin ? launchGame(game, "slot", "tab") : handleLoginClick())}
+                  />
+                ))}
               </div>
+              <div className="mb-4">
+                {isLoadingGames && <LoadApi width={60} />}
+                {(isSingleCategoryView || selectedProvider) && !isLoadingGames && (
+                  <div className="text-center">
+                    <a className="btn btn-theme btn-h-custom" onClick={loadMoreGames}>
+                      Mostrar todo
+                    </a>
+                  </div>
+                )}
+              </div>
+            </div> :
+            <>
+              {firstFiveCategoriesGames && firstFiveCategoriesGames.map((entry, catIndex) => {
+                if (!entry || !entry.games) return null;
+                const categoryKey = entry.category?.id || `cat-${catIndex}`;
+
+                if (entry.games.length === 0) return null;
+
+                return (
+                  <div key={categoryKey} className="casino-games-container">
+                    <div className="casino-games-container__list">
+                      <HotGameSlideshow
+                        games={entry.games.slice(0, 30)}
+                        name={entry.category.name}
+                        title={entry.category.name}
+                        onGameClick={(game) => {
+                          if (isLogin) {
+                            launchGame(game, "slot", "modal");
+                          } else {
+                            handleLoginClick();
+                          }
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </>
           }
 
           <Footer />
