@@ -30,7 +30,7 @@ const ProviderContainer = ({
     const handlePrev = useCallback(() => {
         if (!swiperRef.current) return;
         swiperRef.current.swiper.slidePrev();
-    }, []);    
+    }, []);
 
     return (
         <div className="jel-games-providers-module">

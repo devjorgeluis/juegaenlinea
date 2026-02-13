@@ -7,7 +7,7 @@ import { NavigationContext } from "./NavigationContext";
 import { callApi } from "../../utils/Utils";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
-// import MobileFooter from "./MobileFooter";
+import MobileFooter from "./MobileFooter";
 import LoginModal from "../Modal/LoginModal";
 import SupportModal from "../Modal/SupportModal";
 import MyProfileModal from "../Modal/MyProfileModal";
@@ -371,14 +371,14 @@ const Layout = () => {
                     supportParentOnly={supportParentOnly}
                     supportParent={supportParent}
                 />
-                {/* {isMobile &&
+                {isMobile &&
                     <MobileFooter
                         isSlotsOnly={isSlotsOnly}
                         isMobile={isMobile}
                         isLogin={isLogin}
                         supportParent={supportParent}
                         openSupportModal={openSupportModal}
-                    />} */}
+                    />}
             </NavigationContext.Provider>
         </LayoutContext.Provider>
     );

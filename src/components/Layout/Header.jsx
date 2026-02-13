@@ -155,6 +155,9 @@ const Header = ({
                                         type="button"
                                         data-bs-toggle="dropdown"
                                         aria-expanded="false"
+                                        onClick={() => {
+                                            openSupportModal(false);
+                                        }}
                                     >
                                         <i className="fa-solid fa-headset"></i>
                                     </button>

@@ -30692,6 +30692,12 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     position: relative
 }
 
+@media (max-width:767px) {
+    .filter-and-search-relative {
+        margin-bottom: 0
+    }
+}
+
 .filter-and-search-cat {
     background: #2c3242;
     border-radius: 0 0 10px 10px;
@@ -31074,6 +31080,10 @@ html.chat-opened body .custom-chat .custom-chat-expand {
 @media screen and (max-width:520px) {
     .filter-and-search .filter-content .filter-lc {
         padding: 2px
+    }
+
+    .casino-filter-and-search .filter-and-search .filter-content .filter-lc .filter-lc-ex.filter-lc-ex-text {
+        padding: 15.5% 0;
     }
 }
 
