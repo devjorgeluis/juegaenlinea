@@ -32,11 +32,23 @@ const MobileFooter = ({
     const isMenuExpanded = (menuId) => expandedMenus.includes(menuId);
 
     useEffect(() => {
-        const timer = setInterval(() => {
-            setCurrentTime(new Date().toLocaleTimeString());
-        }, 1000);
+        const updateTime = () => {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            const formattedHours = hours.toString().padStart(2, '0');
+            
+            setCurrentTime(`${formattedHours}:${minutes} ${ampm}`);
+        };
 
-        return () => clearInterval(timer);
+        updateTime();
+
+        const intervalId = setInterval(updateTime, 1000);
+        return () => clearInterval(intervalId);
     }, []);
 
     useEffect(() => {
