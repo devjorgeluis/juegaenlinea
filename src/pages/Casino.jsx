@@ -78,7 +78,7 @@ const Casino = () => {
     setIsSingleCategoryView(false);
     getPage("casino");
 
-    window.scrollTo(0, 0);
+    // window.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
@@ -396,7 +396,7 @@ const Casino = () => {
               onProviderSelect={handleProviderSelect}
             />
 
-            {isSingleCategoryView ? (
+            {selectedProvider || isSingleCategoryView ? (
               <div className="casino">
                 <div className="container">
                   <div className="float-casino-wrapper">
@@ -432,6 +432,7 @@ const Casino = () => {
                     </div>
                   </div>
                 </div>
+                {isLoadingGames && <div className="my-3"><LoadApi /></div>}
               </div>
             ) : (
               <>

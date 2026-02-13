@@ -210,21 +210,30 @@ const Header = ({
                                                 style={{ position: "absolute", inset: "0px auto auto 0px", margin: "0px", transform: "translate3d(-130px, 59.6491px, 0px)" }}
                                             >
                                                 <li>
-                                                    <a onClick={() => navigate("/profile")} className="dropdown-item">
+                                                    <a onClick={() => {
+                                                        navigate("/profile"),
+                                                        handleToggleUserMenu();
+                                                    }} className="dropdown-item">
                                                         <span className="dropdown-icon">
                                                             <img src={ImgProfile} width="25px" />
                                                         </span> Perfil
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a onClick={() => navigate("/profile/transactions")} className="dropdown-item">
+                                                    <a onClick={() => {
+                                                        navigate("/profile#transactions"),
+                                                        handleToggleUserMenu();
+                                                    }} className="dropdown-item">
                                                         <span className="dropdown-icon">
                                                             <img src={ImgTransactions} width="25px" />
                                                         </span> Transacciones
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a onClick={() => navigate("/profile/history")} className="dropdown-item">
+                                                    <a onClick={() => {
+                                                        navigate("/profile#history"),
+                                                        handleToggleUserMenu();
+                                                    }} className="dropdown-item">
                                                         <span className="dropdown-icon">
                                                             <img src={ImgBet} width="25px" />
                                                         </span> Mis apuestas

@@ -1,10 +1,12 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
 import LoadApi from "../../components/Loading/LoadApi";
-// import ImgArrowLeft from "/src/assets/svg/arrow-left.svg";
-// import ImgArrowRight from "/src/assets/svg/arrow-right.svg";
+import ImgArrowLeft from "/src/assets/svg/arrow-left.svg";
+import ImgDoubleArrowLeft from "/src/assets/svg/double-arrow-left.svg";
+import ImgArrowRight from "/src/assets/svg/arrow-right.svg";
+import ImgDoubleArrowRight from "/src/assets/svg/double-arrow-right.svg";
 
 const ProfileHistory = () => {
     const navigate = useNavigate();
@@ -15,7 +17,7 @@ const ProfileHistory = () => {
     const [loading, setLoading] = useState(false);
     const [pagination, setPagination] = useState({
         start: 0,
-        length: 10,
+        length: 5,
         totalRecords: 0,
         currentPage: 1,
     });
@@ -132,138 +134,145 @@ const ProfileHistory = () => {
     const handleNextPage = () => handlePageChange(Math.min(totalPages, pagination.currentPage + 1));
     const handleLastPage = () => handlePageChange(totalPages);
 
-    return (
-        <div className="gaming-history-page">
-            <div className="sc-hHBkOz sc-EHppF dTlmsD cvyYUQ">
-                <div className="sc-hFHyhq sc-dxlFKz gnweDQ kacfn cy-top-banner">
-                    <img className="sc-gVQeIq WsXOD cy-top-banner-image" alt="" src="https://cgp-cdn.safe-iplay.com/cgp-assets/full/skins/888casino/defaults/images/history_bg_title.png" />
-                </div>
-                <div className="sc-lgGbPx dMMndc cy-lobby-header">
-                    <div className="sc-kIJQPJ fwLZFs">
-                        <h1 className="sc-kLzfdg sc-sAqkl hbjpRY hXxZyG cy-lobby-header-title"><span>Historial de juego</span></h1>
-                    </div>
-                    <div className="sc-ijKvfC sc-jghpLD gUbcNA bqtyIy"></div>
-                </div>
+    const renderPagination = () => {
+        if (totalPages <= 1) return null;
 
-                <div className="table-history-container">
+        const isFirstPage = pagination.currentPage === 1;
+        const isLastPage = pagination.currentPage === totalPages;
+
+        return (
+            <nav className="p-paginator-bottom">
+                <div className="p-paginator p-component">
+
+                    {/* First */}
+                    <button
+                        className={`p-paginator-first p-paginator-element p-link ${isFirstPage ? "p-disabled" : ""}`}
+                        onClick={handleFirstPage}
+                        disabled={isFirstPage}
+                    >
+                        <img src={ImgDoubleArrowLeft} alt="First" />
+                    </button>
+
+                    {/* Prev */}
+                    <button
+                        className={`p-paginator-prev p-paginator-element p-link ${isFirstPage ? "p-disabled" : ""}`}
+                        onClick={handlePrevPage}
+                        disabled={isFirstPage}
+                    >
+                        <img src={ImgArrowLeft} alt="Previous" />
+                    </button>
+
+                    {/* Page numbers */}
+                    <span className="p-paginator-pages">
+                        {visiblePages.map((page) => (
+                            <button
+                                key={page}
+                                className={`p-paginator-page p-paginator-element p-link ${pagination.currentPage === page ? "p-highlight" : ""
+                                    }`}
+                                onClick={() => handlePageChange(page)}
+                            >
+                                {page}
+                            </button>
+                        ))}
+                    </span>
+
+                    {/* Next */}
+                    <button
+                        className={`p-paginator-next p-paginator-element p-link ${isLastPage ? "p-disabled" : ""}`}
+                        onClick={handleNextPage}
+                        disabled={isLastPage}
+                    >
+                        <img src={ImgArrowRight} alt="Next" />
+                    </button>
+
+                    {/* Last */}
+                    <button
+                        className={`p-paginator-last p-paginator-element p-link ${isLastPage ? "p-disabled" : ""}`}
+                        onClick={handleLastPage}
+                        disabled={isLastPage}
+                    >
+                        <img src={ImgDoubleArrowRight} alt="Last" />
+                    </button>
+                </div>
+            </nav>
+        );
+    };
+
+    return (
+        <>
+            <h6 className="mb-4">Historial del Juego</h6>
+
+            <div className="p-datatable p-component p-datatable-responsive-scroll p-datatable-sm table-art">
+
+                <div className="p-datatable-wrapper">
                     {loading ? (
-                        <div className="flex justify-center items-center mt-5">
+                        <div className="flex justify-center items-center mt-3">
                             <LoadApi />
                         </div>
                     ) : (
-                        <div className="border-dark-grey-700 rounded-md border">
-                            <div className="relative overflow-x-auto">
-                                <table className="min-w-full table-fixed dark:divide-gray-700 divide-dark-grey-700 divide-y">
-                                    <thead className="relative">
-                                        <tr>
-                                            <th scope="col" className="rtl:text-right text-center whitespace-nowrap py-3.5 pl-4 pr-3.5 text-md font-normal !leading-normal first-of-type:pr-4 last-of-type:pr-4 lg:text-md lg:font-bold [&_button]:m-0 [&_button]:gap-2 [&_button]:p-0 [&_button]:font-normal [&_button]:!leading-normal [&_button]:!text-white [&_button]:hover:bg-transparent [&_button]:lg:text-md [&_button]:lg:font-bold [&_svg]:h-4 [&_svg]:w-4 px-4 py-3.5 text-white font-bold text-md !leading-tight">
-                                                <span>Fecha</span>
-                                            </th>
-                                            <th scope="col" className="rtl:text-right text-center whitespace-nowrap py-3.5 pl-4 pr-3.5 text-md font-normal !leading-normal first-of-type:pr-4 last-of-type:pr-4 lg:text-md lg:font-bold [&_button]:m-0 [&_button]:gap-2 [&_button]:p-0 [&_button]:font-normal [&_button]:!leading-normal [&_button]:!text-white [&_button]:hover:bg-transparent [&_button]:lg:text-md [&_button]:lg:font-bold [&_svg]:h-4 [&_svg]:w-4 px-4 py-3.5 text-white font-bold text-md !leading-tight">
-                                                <span>Monto</span>
-                                            </th>
-                                            <th scope="col" className="rtl:text-right text-center whitespace-nowrap py-3.5 pl-4 pr-3.5 text-md font-normal !leading-normal first-of-type:pr-4 last-of-type:pr-4 lg:text-md lg:font-bold [&_button]:m-0 [&_button]:gap-2 [&_button]:p-0 [&_button]:font-normal [&_button]:!leading-normal [&_button]:!text-white [&_button]:hover:bg-transparent [&_button]:lg:text-md [&_button]:lg:font-bold [&_svg]:h-4 [&_svg]:w-4 px-4 py-3.5 text-white font-bold text-md !leading-tight">
-                                                <span>Balance Previo</span>
-                                            </th>
-                                            <th scope="col" className="rtl:text-right text-center whitespace-nowrap py-3.5 pl-4 pr-3.5 text-md font-normal !leading-normal first-of-type:pr-4 last-of-type:pr-4 lg:text-md lg:font-bold [&_button]:m-0 [&_button]:gap-2 [&_button]:p-0 [&_button]:font-normal [&_button]:!leading-normal [&_button]:!text-white [&_button]:hover:bg-transparent [&_button]:lg:text-md [&_button]:lg:font-bold [&_svg]:h-4 [&_svg]:w-4 px-4 py-3.5 text-white font-bold text-md !leading-tight">
-                                                <span>Balance Posterior</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="dark:divide-gray-800 divide-dark-grey-800 divide-y">
-                                        {transactions.length > 0 ? (
-                                            transactions.map((transaction, index) => (
-                                                <tr key={index} className="hover:bg-dark-grey-900/50">
-                                                    <td className="text-center whitespace-nowrap py-4 pl-4 pr-3.5 text-md !leading-tight first-of-type:pr-4 last-of-type:pr-4 lg:pl-6 text-white">
-                                                        {formatDateDisplay(transaction.created_at)}
-                                                    </td>
-                                                    <td className="text-center whitespace-nowrap py-4 pl-4 pr-3.5 text-md !leading-tight first-of-type:pr-4 last-of-type:pr-4 lg:pl-6 text-white">
-                                                        {formatBalance(transaction.value || transaction.amount || 0)}
-                                                    </td>
-                                                    <td className="text-center whitespace-nowrap py-4 pl-4 pr-3.5 text-md !leading-tight first-of-type:pr-4 last-of-type:pr-4 lg:pl-6 text-white">
-                                                        {formatBalance(transaction.value_before) || 0}
-                                                    </td>
-                                                    <td className="text-center whitespace-nowrap py-4 pl-4 pr-3.5 text-md !leading-tight first-of-type:pr-4 last-of-type:pr-4 lg:pl-6 text-white">
-                                                        {formatBalance(transaction.value_after) || 0}
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        ) : (
+                        <>
+                            {
+                                transactions.length > 0 ?
+                                    <table className="p-datatable-table">
+                                        <thead className="p-datatable-thead" style={{ position: "sticky" }}>
                                             <tr>
-                                                <td colSpan="5">
-                                                    <div className="flex flex-1 flex-col items-center justify-center px-6 py-14 sm:px-14">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" className="iconify iconify--tabler dark:text-gray-500 mx-auto mb-4 h-5 w-5 text-white" width="1em" height="1em" viewBox="0 0 24 24">
-                                                            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4L4 8l8 4l8-4zm-8 8l8 4l8-4M4 16l8 4l8-4"></path>
-                                                        </svg>
-                                                        <p className="dark:text-white text-center text-md !leading-tight text-white">
-                                                            No hay transacciones disponibles.
-                                                        </p>
+                                                <th>
+                                                    <div className="p-column-header-content">
+                                                        <span className="p-column-title">Fecha</span>
                                                     </div>
-                                                </td>
+                                                </th>
+                                                <th>
+                                                    <div className="p-column-header-content">
+                                                        <span className="p-column-title">Monto</span>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div className="p-column-header-content">
+                                                        <span className="p-column-title">Balance Previo</span>
+                                                    </div>
+                                                </th>
+                                                <th>
+                                                    <div className="p-column-header-content">
+                                                        <span className="p-column-title">Balance Posterior</span>
+                                                    </div>
+                                                </th>
                                             </tr>
-                                        )}
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            {/* Pagination */}
-                            {transactions.length > 0 && totalPages > 1 && (
-                                <div className="flex items-center justify-between border-t border-dark-grey-700 px-4 py-3 text-md-center">
-                                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                                        <div>
-                                            <p className="text-md text-white text-center">
-                                                Mostrando <span className="font-medium">{pagination.start + 1}</span> a{' '}
-                                                <span className="font-medium">
-                                                    {Math.min(pagination.start + pagination.length, pagination.totalRecords)}
-                                                </span>{' '}
-                                                de <span className="font-medium">{pagination.totalRecords}</span> resultados
-                                            </p>
+                                        </thead>
+                                        <tbody className="p-datatable-tbody">
+                                            {
+                                                transactions.map((transaction, index) => (
+                                                    <tr key={index} className="p-row-even">
+                                                        <td>
+                                                            {formatDateDisplay(transaction.created_at)}
+                                                        </td>
+                                                        <td>
+                                                            {formatBalance(transaction.value || transaction.amount || 0)}
+                                                        </td>
+                                                        <td>
+                                                            {formatBalance(transaction.value_before) || 0}
+                                                        </td>
+                                                        <td>
+                                                            {formatBalance(transaction.value_after) || 0}
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            }
+                                        </tbody>
+                                    </table> :
+                                    <div className="void-message">
+                                        Nada aquí, nada allá
+                                        <div className="void-mini">
+                                            Actualmente no tienes datos para mostrar
                                         </div>
-                                        {/* <nav className="text-center" aria-label="Pagination">
-                                            <button
-                                                onClick={handlePrevPage}
-                                                disabled={pagination.currentPage === 1}
-                                                className="page-link"
-                                            >
-                                                <img src={ImgArrowLeft} />
-                                            </button>
-
-                                            {visiblePages.map((page) => (
-                                                <button
-                                                    key={page}
-                                                    onClick={() => handlePageChange(page)}
-                                                    className={`page-item ${pagination.currentPage === page ? "active" : ""}`}
-                                                >
-                                                    {page}
-                                                </button>
-                                            ))}
-
-                                            <button
-                                                onClick={handleNextPage}
-                                                disabled={pagination.currentPage === totalPages}
-                                                className="page-link"
-                                            >
-                                                <img src={ImgArrowRight} />
-                                            </button>
-                                        </nav> */}
                                     </div>
-                                </div>
-                            )}
-                        </div>
+                            }
+
+                            {transactions.length > 0 && totalPages > 1 && renderPagination()}
+                        </>
                     )}
                 </div>
-
-                {
-                    !loading && transactions.length === 0 && (
-                        <div className="sc-cQvPqr klLChX">
-                            <div className="sc-gwtVfY kfAfmA">
-                                <div className="sc-VJtBb cfvLht">No se han encontrado más registros de historial.No hemos podido ubicar ningún registro de historial de tus juegos</div>
-                            </div>
-                        </div>
-                    )
-                }
             </div>
-        </div>
+        </>
     );
 };
 

@@ -2,12 +2,20 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import Footer from "../../components/Layout/Footer";
+import ProfileHistory from "./ProfileHistory";
+import ProfileTransaction from "./ProfileTransaction";
+
+import ImgBalance from "/src/assets/svg/balance.svg";
+import ImgCamera from "/src/assets/img/camera-white.png";
+import ImgAvatar from "/src/assets/img/default-avatar.png";
 
 const Profile = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { contextData } = useContext(AppContext);
-    const [isRefreshing, setIsRefreshing] = useState(false);
+
+    const [activeMainTab, setActiveMainTab] = useState("profile");
+    const [activeRecordTab, setActiveRecordTab] = useState("transactions");
 
     useEffect(() => {
         if (!contextData?.session) {
@@ -19,71 +27,249 @@ const Profile = () => {
         window.scrollTo(0, 0);
     }, [location.pathname]);
 
-    const handleRefreshBalance = async () => {
-        setIsRefreshing(true);
-        setTimeout(() => {
-        setIsRefreshing(false);
-        }, 1000);
+    useEffect(() => {
+        const hash = location.hash.replace('#', '');
+        if (hash === 'transaction' || hash === 'transactions') {
+            setActiveMainTab("record");
+            setActiveRecordTab("transactions");
+        } else if (hash === 'history') {
+            setActiveMainTab("record");
+            setActiveRecordTab("history");
+        }
+    }, [location.hash]);
+
+    const TabButton = ({ active, onClick, icon, label }) => {
+        return (
+            <button
+                type="button"
+                className={`nav-link ${active ? "active" : ""}`}
+                onClick={onClick}
+            >
+                {icon ? <i className={icon}></i> : null}
+                <span className="name">{label}</span>
+            </button>
+        );
+    };
+
+    const formatBalance = (value) => {
+        const num = parseFloat(value);
+        if (isNaN(num)) return "0.00";
+        return num.toLocaleString("de-DE", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        });
     };
 
     return (
         <>
-            <div className="relative -mt-4 min-h-[100vh] overflow-x-hidden pb-12 pt-10 sm:pt-16 account-background">
+            <div className="jel-wallet">
                 <div className="container">
-                    <div className="ring-theme-primary/20 shadow-wallet to-theme-primary-950 relative z-[1] mx-auto mb-12 max-w-[39.65rem] rounded-3xl bg-[radial-gradient(95.8%_76.89%_at_50%_0%,_var(--tw-gradient-stops))] p-2 sm:rounded-[2rem] sm:p-12 from-primary-800">
-                        <div className="absolute -top-[1.5rem] left-1/2 z-20 w-full max-w-screen-md -translate-x-1/2"></div>
+                    <div className="jel-wallet-header">
+                        <div className="jel-wallet-header-top">
+                            <div className="jel-wallet-header-user">
+                                <div className="figure avatar-wrapper-panel">
+                                    <div className="personal-image">
+                                        <label className="label">
+                                            <input
+                                                type="file"
+                                                accept="image/jpg, image/jpeg, image/png, image/gif"
+                                            />
 
-                        <a
-                            className="aria-disabled:cursor-not-allowed aria-disabled:opacity-75 flex-shrink-0 disabled:cursor-not-allowed max-w-full flex-shrink-0 text-ellipsis ring-0 focus:outline-none focus-visible:outline-0 font-bold rounded-lg text-base gap-3 p-3 text-theme-secondary-500 disabled:text-theme-secondary-500 disabled:opacity-30 focus:text-theme-secondary-600 hover:text-theme-secondary-600 inline-flex items-center justify-center absolute right-4 top-auto z-10 md:top-4"
-                            title="Account Settings"
-                            href="/profile/detail"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" className="iconify iconify--tabler flex-shrink-0 flex-shrink-0 h-6 w-6" width="1em" height="1em" viewBox="0 0 24 24">
-                                <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2">
-                                    <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066-2.573c-.94-1.543.826-3.31 2.37-2.37c1 .608 2.296.07 2.572-1.065"></path>
-                                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0-6 0"></path>
-                                </g>
-                            </svg>
-                        </a>
+                                            <figure className="personal-figure">
+                                                <img
+                                                    src={contextData?.session?.user?.profile_image || ImgAvatar}
+                                                    className="personal-avatar"
+                                                    alt="avatar"
+                                                />
+                                                <figcaption className="personal-figcaption">
+                                                    <img
+                                                        src={ImgCamera}
+                                                        alt="camera"
+                                                    />
+                                                </figcaption>
+                                            </figure>
+                                        </label>
+                                    </div>
 
-                        <div className="mb-6 flex flex-col items-center justify-center gap-3.5 py-4">
-                            <div className="relative flex aspect-square min-h-24 min-w-24 items-center justify-center rounded-full bg-white">
-
-                            </div>
-                            <span className="text-theme-primary-50 text-center text-2xl font-bold !leading-tight tracking-tight">
-                                {contextData?.session?.user?.username || '-'}
-                            </span>
-                        </div>
-
-                        <div className="ring-theme-primary/10 rounded-2xl ring-1">
-                            <div className="flex flex-col items-center justify-center gap-1.5 py-6">
-                                <span className="text-theme-primary-50 text-center text-sm font-bold uppercase !leading-tight tracking-widest lg:text-xs">
-                                    Saldo
-                                </span>
-                                <div className="relative flex flex-row items-center justify-center gap-2">
-                                    <button
-                                        type="button"
-                                        onClick={handleRefreshBalance}
-                                        disabled={isRefreshing}
-                                        className="aria-disabled:cursor-not-allowed aria-disabled:opacity-75 flex-shrink-0 disabled:cursor-not-allowed max-w-full flex-shrink-0 text-ellipsis ring-0 focus:outline-none focus-visible:outline-0 font-bold rounded-lg text-base gap-3 text-theme-secondary-500 disabled:text-theme-secondary-500 disabled:opacity-30 focus:text-theme-secondary-600 hover:text-theme-secondary-600 absolute left-0 top-1/2 flex h-12 w-12 -translate-x-full -translate-y-1/2 items-center justify-center p-3"
-                                        title="Refresh Balance"
-                                    >
-                                        <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            aria-hidden="true"
-                                            role="img"
-                                            className={`iconify iconify--tabler h-10 w-10 ${isRefreshing ? 'animate-spin' : ''}`}
-                                            width="1em"
-                                            height="1em"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path>
-                                        </svg>
-                                    </button>
-                                    <span className="text-theme-secondary text-center text-2xl font-medium leading-none">
-                                        $ {Number.isFinite(Number(contextData?.session?.user?.balance)) ? Number(contextData?.session?.user?.balance).toFixed(2) : "0.00"}
-                                    </span>
+                                    <div className="name">{contextData?.session?.user?.username}</div>
+                                    <div className="mail">{contextData?.session?.user?.id}</div>
                                 </div>
+                            </div>
+
+                            <div className="jel-wallet-header-amounts">
+                                <div className="jel-wallet-header-amount">
+                                    <div className="jel-wallet-header-amount-ex">
+                                        <div className="icon">
+                                            <img src={ImgBalance} width="40" />
+                                        </div>
+                                        <div className="name">Saldo</div>
+                                        <div className="amount">${formatBalance(contextData?.session?.user?.balance || 0)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="jel-wallet-body">
+                        <div className="jel-wallet-body-header">
+                            <ul className="nav nav-tabs nav-tabs-primary" role="tablist">
+                                <li className="nav-item">
+                                    <TabButton
+                                        active={activeMainTab === "profile"}
+                                        onClick={() => setActiveMainTab("profile")}
+                                        icon="fa-solid fa-user-shield"
+                                        label="Perfil"
+                                    />
+                                </li>
+
+                                <li className="nav-item">
+                                    <TabButton
+                                        active={activeMainTab === "record"}
+                                        onClick={() => setActiveMainTab("record")}
+                                        icon="fa-solid fa-money-bill-transfer"
+                                        label="Historial"
+                                    />
+                                </li>
+                            </ul>
+
+                            <div className="tab-content tab-content-primary">
+                                {activeMainTab === "profile" && (
+                                    <div className="tab-pane fade show active">
+                                        <div className="tap-pane-ex">
+                                            <div className="nav-tabs-ex-mobile">
+                                                <ul className="nav nav-tabs nav-tabs-ex" role="tablist">
+                                                    <li className="nav-item">
+                                                        <button
+                                                            type="button"
+                                                            className="nav-link active"
+                                                        >
+                                                            Mis datos
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div className="tab-content tab-content-ex">
+                                                <div className="tab-pane fade show active">
+                                                    <form className="row" noValidate>
+                                                        <h6 className="mb-4">Información personal</h6>
+
+                                                        <div className="col-md-6">
+                                                            <div className="mb-3">
+                                                                <label htmlFor="username" className="form-label">
+                                                                    Usuario
+                                                                </label>
+                                                                <input
+                                                                    id="username"
+                                                                    type="text"
+                                                                    className="form-control disabled"
+                                                                    disabled
+                                                                    readOnly
+                                                                    value={contextData?.session?.user?.username}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <div className="mb-3">
+                                                                <label htmlFor="email" className="form-label">
+                                                                    Correo electrónico
+                                                                </label>
+                                                                <input
+                                                                    id="email"
+                                                                    type="email"
+                                                                    className="form-control disabled"
+                                                                    disabled
+                                                                    readOnly
+                                                                    value={contextData?.session?.user?.email || "-"}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <div className="mb-3">
+                                                                <label htmlFor="firstname" className="form-label">
+                                                                    Nombres
+                                                                </label>
+                                                                <input
+                                                                    id="firstname"
+                                                                    type="text"
+                                                                    className="form-control disabled"
+                                                                    disabled
+                                                                    readOnly
+                                                                    value={contextData?.session?.user?.first_name || "-"}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-md-6">
+                                                            <div className="mb-3">
+                                                                <label htmlFor="lastname" className="form-label">
+                                                                    Apellidos
+                                                                </label>
+                                                                <input
+                                                                    id="lastname"
+                                                                    type="text"
+                                                                    className="form-control disabled"
+                                                                    disabled
+                                                                    readOnly
+                                                                    value={contextData?.session?.user?.last_name || "-"}
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* ===================== RECORD ===================== */}
+                                {activeMainTab === "record" && (
+                                    <div className="tab-pane fade show active">
+                                        <div className="tap-pane-ex">
+                                            <div className="nav-tabs-ex-mobile">
+                                                <ul className="nav nav-tabs nav-tabs-ex" role="tablist">
+                                                    <li className="nav-item">
+                                                        <button
+                                                            type="button"
+                                                            className={`nav-link ${activeRecordTab === "transactions" ? "active" : ""
+                                                                }`}
+                                                            onClick={() => setActiveRecordTab("transactions")}
+                                                        >
+                                                            Transacciones
+                                                        </button>
+                                                    </li>
+
+                                                    <li className="nav-item">
+                                                        <button
+                                                            type="button"
+                                                            className={`nav-link ${activeRecordTab === "history" ? "active" : ""
+                                                                }`}
+                                                            onClick={() => setActiveRecordTab("history")}
+                                                        >
+                                                            Historial del Juego
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
+                                            <div className="tab-content tab-content-ex">
+                                                {activeRecordTab === "transactions" && (
+                                                    <div className="tab-pane fade show active">
+                                                        <ProfileTransaction />
+                                                    </div>
+                                                )}
+
+                                                {activeRecordTab === "history" && (
+                                                    <div className="tab-pane fade show active">
+                                                        <ProfileHistory />
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -92,7 +278,7 @@ const Profile = () => {
 
             <Footer />
         </>
-    )
+    );
 };
 
 export default Profile;

@@ -11406,9 +11406,8 @@
     }
 
     .p-datatable .p-datatable-tbody>tr {
-        background: #fff;
-        color: #334155;
-        transition: background-color .2s, color .2s, border-color .2s, box-shadow .2s, outline-color .2s
+        background: transparent !important;
+        color: #c4c4c4 !important;
     }
 
     .p-datatable .p-datatable-tbody>tr>td {
@@ -25236,7 +25235,8 @@ footer .footer-finish .footer-finish-top .footer-finish-top-right .contrast-none
 
 .p-datatable .p-datatable-tbody>tr>td {
     font-size: 13px;
-    padding: 12px 8px !important
+    padding: 1rem;
+    font-style: italic;
 }
 
 .p-datatable .p-datatable-tbody>tr>td strong {
@@ -25971,7 +25971,8 @@ html.chat-opened body .custom-chat .custom-chat-expand {
     flex: 1 1 0;
     justify-content: center;
     margin-right: 8px;
-    text-align: center
+    text-align: center;
+    padding: 10px;
 }
 
 .jel-wallet .jel-wallet-header .jel-wallet-header-top .jel-wallet-header-amounts .jel-wallet-header-amount:last-child {
