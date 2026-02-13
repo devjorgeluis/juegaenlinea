@@ -423,7 +423,7 @@ const LiveCasino = () => {
   };
 
   return (
-    <div className="sc-hHBkOz sc-EHppF dTlkTR cvyYUQ">
+    <>
       {showLoginModal && (
         <LoginModal
           isOpen={showLoginModal}
@@ -471,7 +471,7 @@ const LiveCasino = () => {
                     provider={activeCategory?.name || 'Casino'}
                     title={game.name}
                     imageSrc={game.image_local !== null ? contextData.cdnUrl + game.image_local : game.image_url}
-                    onClick={() => (isLogin ? launchGame(game, "slot", "tab") : handleLoginClick())}
+                    onGameClick={() => (isLogin ? launchGame(game, "slot", "tab") : handleLoginClick())}
                   />
                 ))}
               </div>
@@ -543,7 +543,7 @@ const LiveCasino = () => {
         categories={categories}
         selectedCategoryIndex={selectedCategoryIndex}
       />
-    </div>
+    </>
   );
 };
 
