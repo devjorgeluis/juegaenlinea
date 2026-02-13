@@ -2,7 +2,7 @@ import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
 
-const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
+const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     const { contextData, updateSession } = useContext(AppContext);
 
     const [username, setUsername] = useState("");
@@ -10,6 +10,8 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
     const [showPassword, setShowPassword] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -42,23 +44,36 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
             setTimeout(() => {
                 onClose();
             }, 800);
-        } 
-        else if (result?.status === "country") {
-            setErrorMsg(result.message || "Restricción por país");
-        } 
-        else {
-            setErrorMsg(
-                result?.message || 
-                "Nombre de usuario o contraseña incorrectos"
-            );
         }
+        else if (result?.status === "country") {
+            const message = result.message || "Restricción por país";
+            setErrorMsg(message);
+            showErrorNotification(message);
+        }
+        else {
+            const message = "Credenciales inválidas";
+            setErrorMsg(message);
+            showErrorNotification(message);
+        }
+    };
+
+    const showErrorNotification = (message) => {
+        setNotificationMessage(message);
+        setShowNotification(true);
+
+        setTimeout(() => {
+            setShowNotification(false);
+        }, 3000);
+    };
+
+    const hideNotification = () => {
+        setShowNotification(false);
     };
 
     const togglePasswordVisibility = () => {
         setShowPassword((prev) => !prev);
     };
 
-    // Update input type when showPassword changes
     useEffect(() => {
         const passwordInput = document.getElementById("password-input");
         if (passwordInput) {
@@ -119,12 +134,6 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
                                                 role="tabpanel"
                                                 onSubmit={handleSubmit}
                                             >
-                                                {errorMsg && (
-                                                    <div className="alert alert-danger mb-3">
-                                                        {errorMsg}
-                                                    </div>
-                                                )}
-
                                                 <div className="modal-auth-form-title mb-2">Usuario</div>
                                                 <div className="input-group mb-3">
                                                     <input
@@ -183,6 +192,27 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess, isMobile }) => {
                     </div>
                 </div>
             </div>
+
+            {showNotification && (
+                <div id="notification_2" className="el-notification right" role="alert">
+                    <i className="el-icon el-notification__icon el-notification--error">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                            <path fill="currentColor" d="M512 64a448 448 0 1 1 0 896 448 448 0 0 1 0-896m0 393.664L407.936 353.6a38.4 38.4 0 1 0-54.336 54.336L457.664 512 353.6 616.064a38.4 38.4 0 1 0 54.336 54.336L512 566.336 616.064 670.4a38.4 38.4 0 1 0 54.336-54.336L566.336 512 670.4 407.936a38.4 38.4 0 1 0-54.336-54.336z"></path>
+                        </svg>
+                    </i>
+                    <div className="el-notification__group">
+                        <h2 className="el-notification__title">Error</h2>
+                        <div className="el-notification__content">
+                            <p>{notificationMessage}</p>
+                        </div>
+                        <i className="el-icon el-notification__closeBtn" onClick={hideNotification} style={{ cursor: "pointer" }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+                                <path fill="currentColor" d="M764.288 214.592 512 466.88 259.712 214.592a31.936 31.936 0 0 0-45.12 45.12L466.752 512 214.528 764.224a31.936 31.936 0 1 0 45.12 45.184L512 557.184l252.288 252.288a31.936 31.936 0 0 0 45.12-45.12L557.12 512.064l252.288-252.352a31.936 31.936 0 1 0-45.12-45.184z"></path>
+                            </svg>
+                        </i>
+                    </div>
+                </div>
+            )}
         </>
     );
 };
