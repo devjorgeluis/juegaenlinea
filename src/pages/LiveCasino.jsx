@@ -48,6 +48,44 @@ const LiveCasino = () => {
   const pendingCategoryFetchesRef = useRef(0);
   const lastLoadedCategoryRef = useRef(null);
 
+  // Handle page visibility changes (for mobile back navigation)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isMobile) {
+        // Page became visible again (user returned from game)
+        // Reload content if we have categories
+        if (categories.length > 0 && !isLoadingGames) {
+          const hash = location.hash;
+          if (!hash || hash === "#home") {
+            // Reload home content
+            const firstFiveCategories = categories.slice(1, 6);
+            if (firstFiveCategories.length > 0) {
+              setFirstFiveCategoriesGames([]);
+              pendingCategoryFetchesRef.current = firstFiveCategories.length;
+              setIsLoadingGames(true);
+              firstFiveCategories.forEach((item, index) => {
+                fetchContentForCategory(item, item.id, item.table_name, index, true, pageData.page_group_code);
+              });
+            }
+          } else {
+            // Reload category content
+            const categoryCode = hash.substring(1);
+            const category = categories.find(cat => cat.code === categoryCode);
+            if (category) {
+              const categoryIndex = categories.indexOf(category);
+              fetchContent(category, category.id, category.table_name, categoryIndex, true);
+            }
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [categories, location.hash, isMobile, isLoadingGames, pageData]);
+
   useEffect(() => {
     selectedGameId = null;
     selectedGameType = null;
@@ -302,24 +340,42 @@ const LiveCasino = () => {
   };
 
   const launchGame = (game, type, launcher) => {
-    setShouldShowGameModal(true);
-    setShowFullDivLoading(true);
-    selectedGameId = game.id != null ? game.id : selectedGameId;
-    selectedGameType = type != null ? type : selectedGameType;
-    selectedGameLauncher = launcher != null ? launcher : selectedGameLauncher;
-    selectedGameName = game?.name;
-    selectedGameImg = game?.image_local != null ? contextData.cdnUrl + game?.image_local : null;
-    callApi(contextData, "GET", "/get-game-url?game_id=" + selectedGameId, callbackLaunchGame, null);
+    if (isMobile) {
+      // For mobile, directly navigate without setting modal state
+      setShowFullDivLoading(true);
+      selectedGameId = game.id;
+      selectedGameType = type;
+      selectedGameLauncher = launcher;
+      selectedGameName = game?.name;
+      selectedGameImg = game?.image_local != null ? contextData.cdnUrl + game?.image_local : null;
+      callApi(contextData, "GET", "/get-game-url?game_id=" + selectedGameId, callbackLaunchGame, null);
+    } else {
+      // For desktop, show modal
+      setShouldShowGameModal(true);
+      setShowFullDivLoading(true);
+      selectedGameId = game.id != null ? game.id : selectedGameId;
+      selectedGameType = type != null ? type : selectedGameType;
+      selectedGameLauncher = launcher != null ? launcher : selectedGameLauncher;
+      selectedGameName = game?.name;
+      selectedGameImg = game?.image_local != null ? contextData.cdnUrl + game?.image_local : null;
+      callApi(contextData, "GET", "/get-game-url?game_id=" + selectedGameId, callbackLaunchGame, null);
+    }
   };
 
   const callbackLaunchGame = (result) => {
     setShowFullDivLoading(false);
     if (result.status == "0") {
-      switch (selectedGameLauncher) {
-        case "modal":
-        case "tab":
-          setGameUrl(result.url);
-          break;
+      if (isMobile) {
+        // For mobile, directly navigate
+        window.location.href = result.url;
+      } else {
+        // For desktop, set URL for modal
+        switch (selectedGameLauncher) {
+          case "modal":
+          case "tab":
+            setGameUrl(result.url);
+            break;
+        }
       }
     }
   };
@@ -381,7 +437,7 @@ const LiveCasino = () => {
         />
       )}
 
-      {shouldShowGameModal && selectedGameId !== null && (
+      {shouldShowGameModal && selectedGameId !== null && !isMobile && (
         <GameModal
           gameUrl={gameUrl}
           gameName={selectedGameName}
@@ -395,8 +451,8 @@ const LiveCasino = () => {
         />
       )}
 
-      {/* Only show LiveCasino content when game modal is NOT shown */}
-      {!shouldShowGameModal && (
+      {/* Only show LiveCasino content when game modal is NOT shown OR on mobile */}
+      {(!shouldShowGameModal || isMobile) && (
         <div className="casino">
           <Slideshow />
           
