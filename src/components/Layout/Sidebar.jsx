@@ -331,26 +331,6 @@ const Sidebar = ({ isSlotsOnly, isLogin, isMobile, supportParent, openSupportMod
 
                                 <p className="mt-1">Hora local</p>
                             </div>
-
-                            <div className="sidebar-social">
-                                <a
-                                    href="https://www.instagram.com/juegaenlinea/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <i className="fa-brands fa-instagram"></i>
-                                </a>
-
-                                <a
-                                    href="https://www.facebook.com/juegaenlineacom/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    <i className="fa-brands fa-facebook"></i>
-                                </a>
-
-                                <p>Síguenos en redes</p>
-                            </div>
                         </div>
                     </div>
                 </div>
