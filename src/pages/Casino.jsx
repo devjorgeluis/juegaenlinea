@@ -55,6 +55,38 @@ const Casino = () => {
   const pendingCategoryFetchesRef = useRef(0);
 
   useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isMobile) {
+        if (categories.length > 0 && !isLoadingGames) {
+          const hashCode = location.hash.replace('#', '');
+          
+          if (!hashCode || hashCode === 'home') {
+            const firstFiveCategories = categories.slice(0, 5);
+            if (firstFiveCategories.length > 0) {
+              setFirstFiveCategoriesGames([]);
+              pendingCategoryFetchesRef.current = firstFiveCategories.length;
+              setIsLoadingGames(true);
+              firstFiveCategories.forEach((item, index) => {
+                fetchContentForCategory(item, item.id, item.table_name, index, true, pageData.page_group_code);
+              });
+            }
+          } else {
+            const tagIndex = tags.findIndex(t => t.code === hashCode);
+            if (tagIndex !== -1) {
+              getPage(hashCode);
+            }
+          }
+        }
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [categories, location.hash, isMobile, isLoadingGames, pageData, tags]);
+
+  useEffect(() => {
     if (!location.hash || tags.length === 0) return;
     const hashCode = location.hash.replace('#', '');
     const tagIndex = tags.findIndex(t => t.code === hashCode);
@@ -267,28 +299,41 @@ const Casino = () => {
   };
 
   const launchGame = (game, type, launcher) => {
-    setShouldShowGameModal(true);
-    setShowFullDivLoading(true);
-    setActiveCategory(null);
-    selectedGameId = game.id != null ? game.id : selectedGameId;
-    selectedGameType = type != null ? type : selectedGameType;
-    selectedGameLauncher = launcher != null ? launcher : selectedGameLauncher;
-    selectedGameName = game?.name;
-    selectedGameImg = game?.image_local != null ? contextData.cdnUrl + game?.image_local : game.image_url;
-    callApi(contextData, "GET", "/get-game-url?game_id=" + selectedGameId, callbackLaunchGame, null);
+    if (isMobile) {
+      setShowFullDivLoading(true);
+      setActiveCategory(null);
+      selectedGameId = game.id;
+      selectedGameType = type;
+      selectedGameLauncher = launcher;
+      selectedGameName = game?.name;
+      selectedGameImg = game?.image_local != null ? contextData.cdnUrl + game?.image_local : game.image_url;
+      callApi(contextData, "GET", "/get-game-url?game_id=" + selectedGameId, callbackLaunchGame, null);
+    } else {
+      setShouldShowGameModal(true);
+      setShowFullDivLoading(true);
+      setActiveCategory(null);
+      selectedGameId = game.id != null ? game.id : selectedGameId;
+      selectedGameType = type != null ? type : selectedGameType;
+      selectedGameLauncher = launcher != null ? launcher : selectedGameLauncher;
+      selectedGameName = game?.name;
+      selectedGameImg = game?.image_local != null ? contextData.cdnUrl + game?.image_local : game.image_url;
+      callApi(contextData, "GET", "/get-game-url?game_id=" + selectedGameId, callbackLaunchGame, null);
+    }
   };
 
   const callbackLaunchGame = (result) => {
     setShowFullDivLoading(false);
     if (result.status == "0") {
-      switch (selectedGameLauncher) {
-        case "modal":
-        case "tab":
-          setGameUrl(result.url);
-          break;
+      if (isMobile) {
+        window.location.href = result.url;
+      } else {
+        switch (selectedGameLauncher) {
+          case "modal":
+          case "tab":
+            setGameUrl(result.url);
+            break;
+        }
       }
-    } else {
-
     }
   };
 
@@ -348,7 +393,7 @@ const Casino = () => {
           onConfirm={handleLoginConfirm}
         />
       )}
-      {shouldShowGameModal && selectedGameId !== null ? (
+      {shouldShowGameModal && selectedGameId !== null && !isMobile ? (
         <GameModal
           gameUrl={gameUrl}
           gameName={selectedGameName}
