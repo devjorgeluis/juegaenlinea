@@ -23844,7 +23844,9 @@ footer .footer-finish .footer-finish-top .footer-finish-top-right .contrast-none
 .table-art .td-text-opacity {
     font-size: 10px;
     font-weight: 400;
-    opacity: .35
+    opacity: .35;
+    display: block;
+    margin-bottom: 5px;
 }
 
 .table-art .td-results {
@@ -23910,8 +23912,8 @@ footer .footer-finish .footer-finish-top .footer-finish-top-right .contrast-none
     .table-art tbody tr {
         background: #ffffff03;
         border-radius: 5px;
-        margin-top: 12px;
-        padding: 5px 0;
+        margin-top: 0;
+        padding: 0;
         text-align: center;
         vertical-align: top
     }
@@ -23928,6 +23930,7 @@ footer .footer-finish .footer-finish-top .footer-finish-top-right .contrast-none
         background: transparent;
         border-top: 0;
         display: block;
+        text-align: center;
         font-size: 12px;
         padding: 6px 5px;
         width: 100%
@@ -43967,4 +43970,12 @@ html.chat-opened body .custom-chat .custom-chat-expand {
 
 .el-notification-fade-leave-to {
     opacity: 0
+}
+
+@media (max-width: 480px) {
+    .p-paginator .p-paginator-current,
+    .p-paginator .p-paginator-pages .p-paginator-page {
+        height: 2rem;
+        min-width: 2rem
+    }
 }

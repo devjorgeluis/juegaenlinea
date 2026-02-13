@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import { AppContext } from "../../AppContext";
 import { callApi } from "../../utils/Utils";
 import LoadApi from "../../components/Loading/LoadApi";
@@ -12,6 +12,7 @@ const ProfileTransaction = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { contextData } = useContext(AppContext);
+    const { isMobile } = useOutletContext();
 
     const [transactions, setTransactions] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -241,16 +242,20 @@ const ProfileTransaction = () => {
                                             {
                                                 transactions.map((transaction, index) => (
                                                     <tr key={index} className="p-row-even">
-                                                        <td>
+                                                        <td className={`${isMobile ? "td-mobile-mid" : ""}`}>
+                                                            { isMobile && <span className="td-mobile-show td-text-opacity">Fecha <br/></span> }
                                                             {formatDateDisplay(transaction.created_at)}
                                                         </td>
-                                                        <td>
+                                                        <td className={`${isMobile ? "td-mobile-mid" : ""}`}>
+                                                            { isMobile && <span className="td-mobile-show td-text-opacity">Monto <br/></span> }
                                                             {formatBalance(transaction.value || transaction.amount || 0)}
                                                         </td>
-                                                        <td>
+                                                        <td className={`${isMobile ? "td-mobile-mid" : ""}`}>
+                                                            { isMobile && <span className="td-mobile-show td-text-opacity">Balance Previo <br/></span> }
                                                             {formatBalance(transaction.to_current_balance) || 0}
                                                         </td>
-                                                        <td>
+                                                        <td className={`${isMobile ? "td-mobile-mid" : ""}`}>
+                                                            { isMobile && <span className="td-mobile-show td-text-opacity">Balance Posterior <br/></span> }
                                                             {formatBalance(transaction.to_new_balance) || 0}
                                                         </td>
                                                     </tr>

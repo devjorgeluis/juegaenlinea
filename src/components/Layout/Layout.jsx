@@ -295,50 +295,35 @@ const Layout = () => {
                         onClose={() => setShowMyProfileModal(false)}
                     />
                 )}
-                {/* {showHistoryModal && (
-                    <HistoryModal
-                        isOpen={showHistoryModal}
-                        onClose={() => setShowHistoryModal(false)}
-                    />
-                )} */}
+
                 <div id="orbit-container">
-                    <div className={`sc-kYrjYd ${isUserMenuOpen ? 'WziHW' : 'hbEPYD'} cy-overlay`}></div>
+                    <Header
+                        isLogin={isLogin}
+                        isMobile={isMobile}
+                        userBalance={userBalance}
+                        handleLoginClick={handleLoginClick}
+                        handleLogoutClick={handleLogoutClick}
+                        openSupportModal={openSupportModal}
+                        txtSearch={txtSearch}
+                        setTxtSearch={setTxtSearch}
+                        games={searchGames}
+                        setGames={setSearchGames}
+                        isProviderSelected={isProviderSelected}
+                    />
 
-                    <div className="sc-cAgqEL friIZi cy-main-wrapper">
-                        {/* {isUserMenuOpen && (
-                            <div className="sc-eZUyqC cZWmCN cy-user-menu user-menu-open">
-                                <UserMenuContent />
-                            </div>
-                        )} */}
-
-                        <Header
-                            isLogin={isLogin}
-                            isMobile={isMobile}
-                            userBalance={userBalance}
-                            handleLoginClick={handleLoginClick}
-                            handleLogoutClick={handleLogoutClick}
-                            openSupportModal={openSupportModal}
-                            txtSearch={txtSearch}
-                            setTxtSearch={setTxtSearch}
-                            games={searchGames}
-                            setGames={setSearchGames}
-                            isProviderSelected={isProviderSelected}
-                        />
-
-                        <Sidebar
-                            isSlotsOnly={isSlotsOnly}
-                            isMobile={isMobile}
-                            isLogin={isLogin}
-                            supportParent={supportParent}
-                            openSupportModal={openSupportModal}
-                            handleLoginClick={handleLoginClick}
-                            handleLogoutClick={handleLogoutClick}
-                            isUserMenuOpen={isUserMenuOpen}
-                            setIsUserMenuOpen={setIsUserMenuOpen}
-                        />
-                        <div className="wrapper">
-                            <Outlet context={{ isSlotsOnly, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
-                        </div>
+                    <Sidebar
+                        isSlotsOnly={isSlotsOnly}
+                        isMobile={isMobile}
+                        isLogin={isLogin}
+                        supportParent={supportParent}
+                        openSupportModal={openSupportModal}
+                        handleLoginClick={handleLoginClick}
+                        handleLogoutClick={handleLogoutClick}
+                        isUserMenuOpen={isUserMenuOpen}
+                        setIsUserMenuOpen={setIsUserMenuOpen}
+                    />
+                    <div className="wrapper">
+                        <Outlet context={{ isSlotsOnly, isLogin, isMobile, topGames, topArcade, topCasino, topLiveCasino }} />
                     </div>
                 </div>
 
