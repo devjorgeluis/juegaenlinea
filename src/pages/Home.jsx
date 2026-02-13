@@ -352,10 +352,6 @@ const Home = () => {
         index,
         true
       );
-
-      if (isMobile) {
-        setMobileShowMore(true);
-      }
     } else {
       setTxtSearch('');
       document.body.classList.remove('hc-opened-search');

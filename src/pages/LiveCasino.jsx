@@ -412,10 +412,6 @@ const LiveCasino = () => {
         index,
         true
       );
-
-      if (isMobile) {
-        setMobileShowMore(true);
-      }
     } else {
       const firstCategory = categories[0];
       if (firstCategory) {
