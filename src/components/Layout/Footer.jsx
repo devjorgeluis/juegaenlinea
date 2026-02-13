@@ -39,33 +39,6 @@ const Footer = () => {
                             )}
                         </div>
                     </div>
-
-                    <div className="footer-head-item">
-                        <div className="footer-head-item-title">Únete a nosotros</div>
-                        <div className="footer-head-item-body">
-                            <a
-                                href="https://www.instagram.com/juegaenlinea/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="a-social"
-                            >
-                                <span className="a-span">
-                                    <i className="fa-brands fa-instagram"></i>
-                                </span>
-                            </a>
-
-                            <a
-                                href="https://www.facebook.com/juegaenlineacom/"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="a-social"
-                            >
-                                <span className="a-span">
-                                    <i className="fa-brands fa-facebook"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="footer-finish">
